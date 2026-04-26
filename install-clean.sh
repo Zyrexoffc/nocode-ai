@@ -24,8 +24,8 @@ mkdir -p ~/.nocodeai
 echo "[5/6] Download agent..."
 curl -fsSL "https://raw.githubusercontent.com/Zyrexoffc/nocode-ai/main/src/core/agent.py" -o ~/.nocodeai/agent.py
 
-# Config (phi - lightest model for low RAM VPS)
-echo '{"model": "phi", "ollama_host": "http://localhost:11434", "temperature": 0.7, "max_tokens": 2048, "context_size": 2048}' > ~/.nocodeai/config.json
+# Config (qwen2.5:3b - better response than phi)
+echo '{"model": "qwen2.5:3b", "ollama_host": "http://localhost:11434", "temperature": 0.7, "max_tokens": 2048, "context_size": 2048}' > ~/.nocodeai/config.json
 
 # Create launcher
 cat > /usr/local/bin/nocodeai << 'EOF'
@@ -40,7 +40,7 @@ nohup ollama serve > /tmp/ollama.log 2>&1 &
 sleep 3
 
 # Pull model if not exists
-ollama pull phi 2>/dev/null || true
+ollama pull qwen2.5:3b 2>/dev/null || true
 
 echo ""
 echo "===================================="

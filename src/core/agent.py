@@ -21,7 +21,7 @@ class NocodAI:
         except:
             c = {}
         s.host = c.get("ollama_host", "http://localhost:11434")
-        s.model = c.get("model", "phi")
+        s.model = c.get("model", "qwen2.5:3b")
         s.ctx = c.get("context_size", 2048)
     
     def ck(s):
