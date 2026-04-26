@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "NocodAI Installer v7 - Professional"
+echo "NocodAI Installer v8 - Exact Match UI"
 echo "===================================="
 
 # Remove old files
