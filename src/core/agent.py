@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
 import json, re, subprocess, os, sys, requests, time, datetime
 
-MUTED = "\033[0;2m"
-RED = "\033[0;31m"
-ORANGE = "\033[38;5;214m"
-NC = "\033[0m"
-BLD = "\033[1m"
-CYN = "\033[96m"
-GRN = "\033[92m"
-WHT = "\033[97m"
-YEL = "\033[93m"
-BLK = "\033[40m"
+M = "\033[0;2m"
+R = "\033[0;31m"
+O = "\033[38;5;214m"
+N = "\033[0m"
+B = "\033[1m"
+C = "\033[96m"
+G = "\033[92m"
+W = "\033[97m"
+Y = "\033[93m"
+K = "\033[40m"
+
+TL = "┌"
+TR = "┐"
+BL = "└"
+BR = "┘"
+H = "─"
+V = "│"
+LT = "├"
+RT = "┤"
+LB = "┴"
+RB = "┬"
+PM = "┼"
 
 class NocodAI:
     def __init__(s):
@@ -88,63 +100,81 @@ class NocodAI:
             return f"U:{n}"
         except Exception as e: return f"Er:{e}"
     
+    def box(s, title, content):
+        w = 50
+        lines = content.split('\n')
+        print(f"{K}{C}{TL}{H*w}{TR}{N}")
+        if title:
+            print(f"{K}{C}{V}{N} {B}{C}{title}{N}{' '*(w-len(title)-2)}{C}{V}{N}")
+            print(f"{K}{C}{LT}{H*w}{RT}{N}")
+        for line in lines:
+            if line.strip():
+                print(f"{K}{C}{V}{N} {W}{line}{' '*(w-len(line))}{C}{V}{N}")
+            else:
+                print(f"{K}{C}{V}{N} {C}{V}{N}")
+        print(f"{K}{C}{BL}{H*w}{BR}{N}")
+    
     def run(s):
-        print(f"{MUTED}                   {NC}             ▄     ")
-        print(f"{MUTED}█▀▀█ █▀▀█ █▀▀█ █▀▀▄ {NC}█▀▀▀ █▀▀█ █▀▀█ █▀▀█")
-        print(f"{MUTED}█░░█ █░░█ █▀▀▀ █░░█ {NC}█░░░ █░░█ █░░█ █▀▀▀")
-        print(f"{MUTED}▀▀▀▀ █▀▀▀ ▀▀▀▀ ▀  ▀ {NC}▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀")
-        print(f"\n{MUTED}OpenCode includes free models, to start:{NC}\n")
-        print(f"{MUTED}cd <project>  {NC}# Open directory")
-        print(f"{MUTED}nocodeai    {NC}# Run command")
+        print(f"\n{K}{M}                   {N}             ▄     ")
+        print(f"{K}{M}█▀▀█ █▀▀█ █▀▀█ █▀▀▄ {N}█▀▀▀ █▀▀█ █▀▀█ █▀▀█")
+        print(f"{K}{M}█░░█ █░░█ █▀▀▀ █░░█ {N}█░░░ █░░█ █░░█ █▀▀▀")
+        print(f"{K}{M}▀▀▀▀ █▀▀▀ ▀▀▀▀ ▀  ▀ {N}▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀")
+        
+        print(f"\n{K}{M}OpenCode includes free models, to start:{N}\n")
+        print(f"{K}{M}cd <project>  {N}# Open directory")
+        print(f"{K}{M}nocodeai    {N}# Run command")
         
         if not s.ck():
-            print(f"\n{RED}[*] Error: Ollama not running{NC}")
-            print(f"{MUTED}Please start Ollama first: ollama serve{NC}")
+            s.box("Error", "Ollama not running\nPlease run: ollama serve")
             return
-        
         if not s.cm():
-            print(f"\n{ORANGE}[*] Downloading model...{NC}")
+            print(f"\n{K}{O} Downloading model...{N}")
             subprocess.run(["ollama","pull",s.model],timeout=600)
         
-        s.sp="""You are NocodAI, a helpful AI assistant.
+        s.sp="""You are NocodAI.
 1. LEGAL: Only legal activities.
 2. TOOLS: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system.
-3. OUTPUT: Use code blocks.
+3. OUTPUT: Code in blocks.
 4. LANGUAGE: Same as user."""
         
-        print(f"\n{BLD}{CYN}╭───────────────────────────────────{BLK}{CYN} Input {BLD}{CYN}──────────────────────────────────╮{NC}")
-        print(f"{BLD}{CYN}│{NC} Type your message or @path               {BLD}{CYN}│{NC}")
-        print(f"{BLD}{CYN}│{NC} {WHT}~{' '*35}{BLD}{CYN}│{NC}")
-        print(f"{BLD}{CYN}╰───────────────────────────────────────────────────────────────────╯{NC}\n")
+        w = 50
+        print(f"\n{K}{C}{TL}{H*50}{TR}{N}")
+        print(f"{K}{C}{V}{N} {C}Type your message or @path                 {C}{V}{N}")
+        print(f"{K}{C}{V}{N} {W}~{' '*46}{C}{V}{N}")
+        print(f"{K}{C}{BL}{H*50}{BR}{N}\n")
         
         while 1:
-            p=input(f"{BLK}{GRN}│{WHT} > {NC}")
+            p=input(f"{K}{G}│{W} > {N}")
             if p.lower() in ["exit","quit","q"]: 
-                print(f"{CYN}[*] Goodbye!{NC}")
+                print(f"{K}{C}[*] Goodbye!{N}")
                 break
             
             s.h.append({"role":"user","content":p})
-            print(f"\n{MUTED}Thinking...{NC}")
+            print(f"\n{K}{M}Thinking...{N}")
             full="".join([c for c in s.gs(p,s.sp)])
             
-            print(f"\n{BLK}{ORANGE}╭───────────────────────────────────{BLK}{ORANGE} Response {BLK}{ORANGE}───────────────────────────╮{NC}")
+            print(f"\n{K}{O}{TL}{H*50}{TR}{N}")
+            print(f"{K}{O}{V}{N} {O}Response{O}{V}{N}")
+            print(f"{K}{O}{LT}{H*50}{RT}{N}")
             for line in full.split('\n'):
                 if line.strip():
-                    print(f"{BLK}{ORANGE}│{NC} {WHT}{line}{NC}")
-            print(f"{BLK}{ORANGE}╰───────────���─��─────────────────────────────────────────────────────╯{NC}\n")
+                    print(f"{K}{O}{V}{N} {W}{line}{' '*(50-len(line))}{K}{O}{V}{N}")
+                else:
+                    print(f"{K}{O}{V}{N}   {K}{O}{V}{N}")
+            print(f"{K}{O}{BL}{H*50}{BR}{N}\n")
             
             s.h.append({"role":"assistant","content":full})
             tools = s.pt(full)
             if tools:
                 for t in tools:
                     n,a=t.get("name",""),t.get("arguments",{})
-                    print(f"{YEL}>>> {n}{NC}")
+                    print(f"{K}{Y}>>> {n}{N}")
                     r=s.ex(n,a)
-                    print(f"{YEL}{r[:200]}{NC}\n")
+                    print(f"{K}{Y}{r[:200]}{N}\n")
             
-            print(f"{BLK}{CYN}╭───────────────────────────────────{BLK}{CYN} Input {BLD}{CYN}──────────────────────────────────╮{NC}")
-            print(f"{BLK}{CYN}│{NC} Type your message or @path               {BLK}{CYN}│{NC}")
-            print(f"{BLK}{CYN}│{NC} {WHT}~{' '*35}{BLK}{CYN}│{NC}")
-            print(f"{BLK}{CYN}╰───────────────────────────────────────────────────────────────────╯{NC}")
+            print(f"{K}{C}{TL}{H*50}{TR}{N}")
+            print(f"{K}{C}{V}{N} {C}Type your message or @path                 {C}{V}{N}")
+            print(f"{K}{C}{V}{N} {W}~{' '*46}{C}{V}{N}")
+            print(f"{K}{C}{BL}{H*50}{BR}{N}")
 
 if __name__=="__main__": NocodAI().run()
