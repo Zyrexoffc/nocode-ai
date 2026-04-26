@@ -86,7 +86,7 @@ class NocodAI:
             return f"U:{n}"
         except Exception as e: return f"Er:{e}"
     
-def run(s):
+    def run(s):
         print(f"""
 {Colors.BOLD}{Colors.INFO}  ██████╗ ███████╗███████╗██╗     ██╗███╗   ███╗
 {Colors.INFO}  ██╔══██╗██╔════╝██╔════╝██║     ██║████╗  ████║
@@ -105,6 +105,12 @@ def run(s):
             time.sleep(3)
         if not s.cm():
             print(f"{Colors.TOOL}[*] Downloading model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
+        sp="""You are NocodAI, a professional AI assistant with these rules:
+LEGALITY: Only assist with LEGAL activities. Refuse: hacking, malware, illegal, piracy, fraud.
+FILE ACCESS: You have root access. Read/edit files only when user explicitly asks.
+TOOLS: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system.
+CODING: Write clean, efficient code with best practices.
+LANGUAGE: Respond in the SAME LANGUAGE user uses."""
         s.ws = os.getcwd()
         print(f"""
 {Colors.BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
