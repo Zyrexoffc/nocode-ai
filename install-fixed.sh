@@ -10,11 +10,10 @@ curl -fsSL https://ollama.com/install.sh | sh 2>/dev/null || echo "Ollama ready"
 echo "[3] Creating directories..."
 mkdir -p ~/.nocode/src/core ~/.nocode/config ~/.nocode/logs ~/.nocode/models
 
-echo "[4] Copying fixed files..."
-# Copy agent (udah fix)
-cp $(dirname $0)/src/core/agent.py ~/.nocode/src/core/agent.py
+echo "[4] Downloading agent.py..."
+curl -fsSL https://raw.githubusercontent.com/Zyrexoffc/nocode-ai/main/src/core/agent.py -o ~/.nocode/src/core/agent.py
 
-# Create config
+echo "[5] Creating config..."
 cat > ~/.nocode/config/config.json << 'EOF'
 {
   "model": "qwen3.5:9b",
@@ -25,7 +24,6 @@ cat > ~/.nocode/config/config.json << 'EOF'
 }
 EOF
 
-# Create system prompt
 cat > ~/.nocode/config/system_prompt.txt << 'EOF'
 你是 nocode-ai，强大的本地 AI 助手。
 
@@ -42,7 +40,7 @@ cat > ~/.nocode/config/system_prompt.txt << 'EOF'
 开始！
 EOF
 
-echo "[5] Creating binary..."
+echo "[6] Creating binary..."
 cat > ~/.nocodeai << 'EOF'
 #!/bin/bash
 cd ~/.nocode
@@ -52,11 +50,13 @@ chmod +x ~/.nocodeai
 
 echo "alias nocode='~/.nocodeai'" >> ~/.bashrc
 
-echo "[6] Starting Ollama..."
+echo "[7] Starting Ollama..."
 export OLLAMA_HOST=127.0.0.1:11434
 nohup ollama serve > /tmp/ollama.log 2>&1 &
 sleep 3
 
 echo ""
-echo "DONE! Run: ~/.nocodeai"
+echo "========================================="
+echo "  DONE! Run: ~/.nocodeai"
+echo "========================================="
 echo ""
