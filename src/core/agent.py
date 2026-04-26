@@ -90,14 +90,34 @@ class NocodAI:
         print(f"/ __| | | |_ _|  _ \\| _ \\ ")
         print(f"\\__ \\ |_| || || |_) | |_) |")
         print(f"|___/\\___/|___|____/|____/ ")
-        print(f"{Colors.INFO}NocodAI v1.3 - Simple Mode{Colors.RESET}")
+        print(f"{Colors.INFO}NocodAI v1.6 - Professional{Colors.RESET}")
         if not s.ck():
             print(f"{Colors.ERROR}Starting Ollama...{Colors.RESET}")
             subprocess.Popen(["ollama","serve"],stdout=open(os.devnull,"w"),stderr=open(os.devnull,"w"))
             time.sleep(3)
         if not s.cm():
             print(f"{Colors.TOOL}DL model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
-sp="You are NocodAI, a helpful AI assistant. Respond in the SAME LANGUAGE the user uses. If they write in Indonesian, respond in Indonesian. If in English, respond in English. If in Chinese, respond in Chinese. Always match their language."
+sp="""You are NocodAI, a professional AI assistant with these rules:
+
+LEGALITY: Only assist with LEGAL activities. Refuse: hacking, malware, illegal content, piracy, fraud, harassment, any illegal activity.
+
+FILE ACCESS: You have root access to the VPS. When user asks to read/edit/delete files, you CAN do it. Use these tools only when explicitly requested by user.
+
+TOOLS AVAILABLE:
+- shell: Run bash commands
+- file_read: Read files (path required)
+- file_write: Write/create files (path, content required)
+- file_edit: Edit file (path, oldString, newString required)
+- file_delete: Delete files/directories
+- file_list: List directory contents
+- mkdir: Create directory
+- search: Search for pattern in files
+- git: Git operations
+- system: Get system info
+
+CODING: Write clean, efficient code. Use proper syntax and best practices.
+
+LANGUAGE: Respond in the SAME LANGUAGE the user uses."""
         print(f"{Colors.SUCCESS}READY! Just type and chat:{Colors.RESET}\n")
         while 1:
             try:
