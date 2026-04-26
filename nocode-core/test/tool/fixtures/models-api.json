@@ -11341,13 +11341,13 @@
       }
     }
   },
-  "opencode": {
-    "id": "opencode",
-    "env": ["OPENCODE_API_KEY"],
+  "nocode-ai": {
+    "id": "nocode-ai",
+    "env": ["NOCODE_AI_API_KEY"],
     "npm": "@ai-sdk/openai-compatible",
-    "api": "https://opencode.ai/zen/v1",
-    "name": "OpenCode Zen",
-    "doc": "https://opencode.ai/docs/zen",
+    "api": "https://nocode-ai.ai/zen/v1",
+    "name": "NocodeAi Zen",
+    "doc": "https://nocode-ai.ai/docs/zen",
     "models": {
       "gpt-5.2-codex": {
         "id": "gpt-5.2-codex",
@@ -64067,13 +64067,13 @@
       }
     }
   },
-  "opencode-go": {
-    "id": "opencode-go",
-    "env": ["OPENCODE_API_KEY"],
+  "nocode-ai-go": {
+    "id": "nocode-ai-go",
+    "env": ["NOCODE_AI_API_KEY"],
     "npm": "@ai-sdk/openai-compatible",
-    "api": "https://opencode.ai/zen/go/v1",
-    "name": "OpenCode Go",
-    "doc": "https://opencode.ai/docs/zen",
+    "api": "https://nocode-ai.ai/zen/go/v1",
+    "name": "NocodeAi Go",
+    "doc": "https://nocode-ai.ai/docs/zen",
     "models": {
       "kimi-k2.5": {
         "id": "kimi-k2.5",

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-NocodAI v3.0 - Revamped UI with OpenCode Design System
-Features: Modern TUI, Unicode boxes, OpenCode color theme, multi-agent, session DB
+NocodAI v3.0 - Revamped UI with NocodeAi Design System
+Features: Modern TUI, Unicode boxes, NocodeAi color theme, multi-agent, session DB
 """
 import os, sys, json, subprocess, requests, re, time, datetime, threading, signal, hashlib, sqlite3, glob, uuid
 from pathlib import Path
@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Any
 
 VERSION = "3.0.0"
 
-# OpenCode Dark Theme Colors (from opencode theme)
+# NocodeAi Dark Theme Colors (from nocode-ai theme)
 class Theme:
     # Backgrounds
     BG1 = "\033[48;5;232m"      # darkStep1 #0a0a0a
@@ -550,7 +550,7 @@ class NocodAI:
 
     def run(s):
         UI.clear()
-        UI.header(f"NOCOD.AI v{VERSION}", "OpenCode-Style AI Assistant • Multi-Agent • Session DB • Permission System")
+        UI.header(f"NOCOD.AI v{VERSION}", "NocodeAi-Style AI Assistant • Multi-Agent • Session DB • Permission System")
 
         prov_id = s.cfg.get("default_provider", "ollama")
         if not s.check_provider(prov_id):
