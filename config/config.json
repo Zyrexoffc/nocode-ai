@@ -1,0 +1,54 @@
+{
+  "model": "qwen3.5:9b",
+  "provider": "ollama",
+  "ollama_host": "http://localhost:11434",
+  "api_key": "",
+  "temperature": 0.7,
+  "max_tokens": 8192,
+  "context_size": 8192,
+  "think_mode": true,
+  "tools": {
+    "shell": {
+      "enabled": true,
+      "allowed_commands": ["*"],
+      "timeout": 120
+    },
+    "file": {
+      "enabled": true,
+      "allowed_paths": ["/root", "/home", "/var/www", "/opt"],
+      "max_file_size": 10485760
+    },
+    "editor": {
+      "enabled": true,
+      "default_editor": "nano"
+    },
+    "git": {
+      "enabled": true
+    },
+    "search": {
+      "enabled": true,
+      "max_results": 50
+    }
+  },
+  "security": {
+    "dangerous_commands": ["rm -rf /", "dd if=", "mkfs", ">:", "|", "&&", "||"],
+    "block_patterns": ["*/etc/passwd", "*/etc/shadow", "*/.ssh/*", "*/.aws/*"]
+  },
+  "ui": {
+    "theme": "dark",
+    "show_thinking": true,
+    "show_tokens": true,
+    "color_scheme": {
+      "user": "green",
+      "assistant": "cyan",
+      "tool": "yellow",
+      "error": "red",
+      "success": "green"
+    }
+  },
+  "logging": {
+    "enabled": true,
+    "level": "info",
+    "file": "/root/.nocode/logs/agent.log"
+  }
+}
