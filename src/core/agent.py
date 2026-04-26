@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 import json, re, subprocess, os, sys, requests, time, datetime
 
-class C:
-    BLK = "\033[40m"
-    RED = "\033[91m"
-    GRN = "\033[92m"
-    YEL = "\033[93m"
-    BLU = "\033[94m"
-    CYN = "\033[96m"
-    WHT = "\033[97m"
-    RST = "\033[0m"
-    BLD = "\033[1m"
-    DIM = "\033[90m"
-    PUR = "\033[95m"
+MUTED = "\033[0;2m"
+RED = "\033[0;31m"
+ORANGE = "\033[38;5;214m"
+NC = "\033[0m"
+BLD = "\033[1m"
+CYN = "\033[96m"
+GRN = "\033[92m"
+WHT = "\033[97m"
+YEL = "\033[93m"
+BLK = "\033[40m"
 
 class NocodAI:
     def __init__(s):
@@ -91,79 +89,62 @@ class NocodAI:
         except Exception as e: return f"Er:{e}"
     
     def run(s):
-        print(f"{C.BLK}")
-        print(f"{C.BLD}{C.CYN}  _   _ ___ ____  ___ {C.RST}")
-        print(f"{C.BLD}{C.CYN} | | | |_ _|  _ \\| _ \\ {C.RST}")
-        print(f"{C.BLD}{C.CYN} | |_| || || |_) | |_) |{C.RST}")
-        print(f"{C.BLD}{C.CYN} |___| |___|____/|____/ {C.RST}")
-        print(f"{C.BLD}{C.GRN}╭{'─'*44}╮{C.RST}")
-        print(f"{C.BLD}{C.GRN}│{C.RST} {C.GRN}NOCODE-AI{C.RST} {C.WHT}V2.0.0{C.RST}           {C.GRN}│{C.RST} {C.WHT}Zyrex Official{C.RST}        {C.GRN}│{C.RST}")
-        print(f"{C.BLD}{C.GRN}╰{'─'*44}╯{C.RST}")
+        print(f"{MUTED}                   {NC}             ▄     ")
+        print(f"{MUTED}█▀▀█ █▀▀█ █▀▀█ █▀▀▄ {NC}█▀▀▀ █▀▀█ █▀▀█ █▀▀█")
+        print(f"{MUTED}█░░█ █░░█ █▀▀▀ █░░█ {NC}█░░░ █░░█ █░░█ █▀▀▀")
+        print(f"{MUTED}▀▀▀▀ █▀▀▀ ▀▀▀▀ ▀  ▀ {NC}▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀")
+        print(f"\n{MUTED}OpenCode includes free models, to start:{NC}\n")
+        print(f"{MUTED}cd <project>  {NC}# Open directory")
+        print(f"{MUTED}nocodeai    {NC}# Run command")
         
         if not s.ck():
-            print(f"{C.YEL}[*] Starting Ollama...{C.RST}")
-            subprocess.Popen(["ollama","serve"],stdout=open(os.devnull,"w"),stderr=open(os.devnull,"w"))
-            time.sleep(3)
+            print(f"\n{RED}[*] Error: Ollama not running{NC}")
+            print(f"{MUTED}Please start Ollama first: ollama serve{NC}")
+            return
+        
         if not s.cm():
-            print(f"{C.YEL}[*] Downloading model...{C.RST}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
+            print(f"\n{ORANGE}[*] Downloading model...{NC}")
+            subprocess.run(["ollama","pull",s.model],timeout=600)
         
-        w = 44
-        h = 2
-        d = f" Date: {s.tm}"
-        print(f"\n{C.BLK}{C.CYN}╭{'─'*w}╮{C.RST}")
-        print(f"{C.BLK}{C.CYN}│{C.RST} {C.CYN}Description:{C.RST} AI Assistant with tool execution     {C.CYN}│{C.RST}")
-        print(f"{C.BLK}{C.CYN}│{C.RST} {C.CYN}{d}{' '*(w-len(d))}{C.CYN}│{C.RST}")
-        print(f"{C.BLK}{C.CYN}╰{'─'*w}╯{C.RST}")
-        
-        print(f"\n{C.BLK}{C.CYN}╭{'─'*w}╮{C.RST}")
-        print(f"{C.BLK}{C.CYN}│{C.RST} {C.CYN}Type your message or @path               {C.RST}")
-        print(f"{C.BLK}{C.CYN}│{C.RST} {C.WHT}~{' '*41}{C.RST}")
-        print(f"{C.BLK}{C.CYN}╰{'─'*w}╯{C.RST}")
-        
-        print(f"\n{C.GRN}✓ Ready!{C.RST}\n")
-        
-        s.sp="""You are NocodAI.
-1. LEGAL: Only legal. REFUSE hacking/malware/piracy.
+        s.sp="""You are NocodAI, a helpful AI assistant.
+1. LEGAL: Only legal activities.
 2. TOOLS: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system.
-3. CODING: Clean code.
-4. OUTPUT: Code in blocks.
-5. LANGUAGE: Same as user."""
+3. OUTPUT: Use code blocks.
+4. LANGUAGE: Same as user."""
+        
+        print(f"\n{BLD}{CYN}╭───────────────────────────────────{BLK}{CYN} Input {BLD}{CYN}──────────────────────────────────╮{NC}")
+        print(f"{BLD}{CYN}│{NC} Type your message or @path               {BLD}{CYN}│{NC}")
+        print(f"{BLD}{CYN}│{NC} {WHT}~{' '*35}{BLD}{CYN}│{NC}")
+        print(f"{BLD}{CYN}╰───────────────────────────────────────────────────────────────────╯{NC}\n")
         
         while 1:
-            p=input(f"{C.BLK}{C.CYN}│{C.WHT} > {C.RST}")
+            p=input(f"{BLK}{GRN}│{WHT} > {NC}")
             if p.lower() in ["exit","quit","q"]: 
-                print(f"{C.CYN}[*] Bye!{C.RST}")
+                print(f"{CYN}[*] Goodbye!{NC}")
                 break
             
             s.h.append({"role":"user","content":p})
-            print(f"{C.DIM}Thinking...{C.RST}")
+            print(f"\n{MUTED}Thinking...{NC}")
             full="".join([c for c in s.gs(p,s.sp)])
             
-            print(f"\n{C.BLK}{C.BLU}╭{'─'*w}╮{C.RST}")
+            print(f"\n{BLK}{ORANGE}╭───────────────────────────────────{BLK}{ORANGE} Response {BLK}{ORANGE}───────────────────────────╮{NC}")
             for line in full.split('\n'):
                 if line.strip():
-                    print(f"{C.BLK}{C.BLU}│{C.RST} {C.WHT}{line}{' '*(w-len(line))}{C.BLK}{C.BLU}│{C.RST}")
-            print(f"{C.BLK}{C.BLU}╰{'─'*w}╯{C.RST}\n")
+                    print(f"{BLK}{ORANGE}│{NC} {WHT}{line}{NC}")
+            print(f"{BLK}{ORANGE}╰───────────���─��─────────────────────────────────────────────────────╯{NC}\n")
             
             s.h.append({"role":"assistant","content":full})
             tools = s.pt(full)
             if tools:
                 for t in tools:
                     n,a=t.get("name",""),t.get("arguments",{})
-                    print(f"{C.YEL}>>> {n}{C.RST}")
+                    print(f"{YEL}>>> {n}{NC}")
                     r=s.ex(n,a)
-                    print(f"{C.YEL}{r[:200]}{C.RST}\n")
-                    s.h.append({"role":"user","content":f"Tool {n}: {r}"})
-                    full="".join([c for c in s.gs("Final answer.",s.sp)])
-                    print(f"\n{C.BLK}{C.GRN}╭{'─'*w}╮{C.RST}")
-                    for line in full.split('\n'):
-                        if line.strip():
-                            print(f"{C.BLK}{C.GRN}│{C.RST} {C.WHT}{line}{' '*(w-len(line))}{C.BLK}{C.GRN}│{C.RST}")
-                    print(f"{C.BLK}{C.GRN}╰{'─'*w}╯{C.RST}\n")
+                    print(f"{YEL}{r[:200]}{NC}\n")
             
-            print(f"{C.BLK}{C.CYN}╭{'─'*w}╮{C.RST}")
-            print(f"{C.BLK}{C.CYN}│{C.RST} {C.CYN}Type your message or @path               {C.RST}")
-            print(f"{C.BLK}{C.CYN}│{C.RST} {C.WHT}~{' '*41}{C.RST}")
-            print(f"{C.BLK}{C.CYN}╰{'─'*w}╯{C.RST}")
+            print(f"{BLK}{CYN}╭───────────────────────────────────{BLK}{CYN} Input {BLD}{CYN}──────────────────────────────────╮{NC}")
+            print(f"{BLK}{CYN}│{NC} Type your message or @path               {BLK}{CYN}│{NC}")
+            print(f"{BLK}{CYN}│{NC} {WHT}~{' '*35}{BLK}{CYN}│{NC}")
+            print(f"{BLK}{CYN}╰───────────────────────────────────────────────────────────────────╯{NC}")
 
 if __name__=="__main__": NocodAI().run()
