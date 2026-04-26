@@ -86,7 +86,7 @@ class NocodAI:
             return f"U:{n}"
         except Exception as e: return f"Er:{e}"
     
-def run(s):
+    def run(s):
         print(f"""{Colors.INFO}
 ▝▜▄     {Colors.SUCCESS}NOCODE-AI V2.0.0{Colors.INFO}
    ▝▜▄
