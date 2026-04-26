@@ -86,7 +86,7 @@ class NocodAI:
             return f"U:{n}"
         except Exception as e: return f"Er:{e}"
     
-def run(s):
+    def run(s):
         import datetime
         s.ws = os.getcwd()
         s.tm = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
