@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "NocodAI Installer v6 - Clean Install"
+echo "NocodAI Installer v7 - Professional"
 echo "===================================="
 
 # Remove old files
