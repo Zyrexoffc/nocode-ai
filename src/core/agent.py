@@ -114,7 +114,7 @@ def run(s):
             time.sleep(3)
         if not s.cm():
             print(f"{Colors.TOOL}[*] Downloading model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
-sp="""You are NocodAI, a professional AI assistant with ROOT ACCESS to the VPS.
+        s.sp="""You are NocodAI, a professional AI assistant with ROOT ACCESS to the VPS.
 
 RULES:
 1. LEGALITY: Only assist with LEGAL activities. REFUSE: hacking, malware, Piracy, fraud, harassment, illegal content.
@@ -136,28 +136,28 @@ RULES:
 7. LANGUAGE: Respond in SAME LANGUAGE user uses (Indonesian/English/etc)."""
 
 print(f"{Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────{Colors.RESET}\n")
-        while 1:
-            try:
-                p=input(f"{Colors.INFO}> {Colors.RESET}")
-                if p.lower() in ["exit","quit","q"]: print(f"{Colors.INFO}[*] Goodbye!{Colors.RESET}"); break
-                s.h.append({"role":"user","content":p})
-                full=""
-                print(f"{Colors.ASSISTANT}",end="")
-                for c in s.gs(p,sp): print(c,end="",flush=1); full+=c
+while 1:
+    try:
+        p=input(f"{Colors.INFO}> {Colors.RESET}")
+        if p.lower() in ["exit","quit","q"]: print(f"{Colors.INFO}[*] Goodbye!{Colors.RESET}"); break
+        s.h.append({"role":"user","content":p})
+        full=""
+        print(f"{Colors.ASSISTANT}",end="")
+        for c in s.gs(p,s.sp): print(c,end="",flush=1); full+=c
+        print(f"{Colors.RESET}")
+        s.h.append({"role":"assistant","content":full})
+        tools = s.pt(full)
+        if tools:
+            for t in tools:
+                n,a=t.get("name",""),t.get("arguments",{})
+                print(f"\n{Colors.TOOL}>>> Executing: {n}{Colors.RESET}")
+                r=s.ex(n,a)
+                print(f"\n{Colors.TOOL}Result: {r[:500]}{Colors.RESET}\n")
+                s.h.append({"role":"user","content":f"Tool {n} result: {r}"})
+                print(f"{Colors.ASSISTANT}>>> ",end="",flush=1)
+                for c in s.gs("Based on the tool result, provide your final answer.",s.sp): print(c,end="",flush=1)
                 print(f"{Colors.RESET}")
-                s.h.append({"role":"assistant","content":full})
-                tools = s.pt(full)
-                if tools:
-                    for t in tools:
-                        n,a=t.get("name",""),t.get("arguments",{})
-                        print(f"\n{Colors.TOOL}>>> Executing: {n}{Colors.RESET}")
-                        r=s.ex(n,a)
-                        print(f"\n{Colors.TOOL}Result: {r[:500]}{Colors.RESET}\n")
-                        s.h.append({"role":"user","content":f"Tool {n} result: {r}"})
-                        print(f"{Colors.ASSISTANT}>>> ",end="",flush=1)
-                        for c in s.gs("Based on the tool result, provide your final answer.",sp): print(c,end="",flush=1)
-                        print(f"{Colors.RESET}")
-            except KeyboardInterrupt: print(f"\n{Colors.INFO}exit{Colors.RESET}")
-            except Exception as e: print(f"{Colors.ERROR}{e}{Colors.RESET}")
+    except KeyboardInterrupt: print(f"\n{Colors.INFO}exit{Colors.RESET}")
+    except Exception as e: print(f"{Colors.ERROR}{e}{Colors.RESET}")
 
 if __name__=="__main__": NocodAI().run()
