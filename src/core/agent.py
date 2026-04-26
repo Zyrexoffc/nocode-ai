@@ -12,6 +12,7 @@ class C:
     RST = "\033[0m"
     BLD = "\033[1m"
     DIM = "\033[90m"
+    PUR = "\033[95m"
 
 class NocodAI:
     def __init__(s):
@@ -95,9 +96,9 @@ class NocodAI:
         print(f"{C.BLD}{C.CYN} | | | |_ _|  _ \\| _ \\ {C.RST}")
         print(f"{C.BLD}{C.CYN} | |_| || || |_) | |_) |{C.RST}")
         print(f"{C.BLD}{C.CYN} |___| |___|____/|____/ {C.RST}")
-        print(f"{C.BLD}{C.GRN}╔═══════════════════════════════════════╗{C.RST}")
-        print(f"{C.BLD}{C.GRN}║  NOCODE-AI V2.0.0  │  Zyrex Official  ║{C.RST}")
-        print(f"{C.BLD}{C.GRN}╚═══════════════════════════════════════╝{C.RST}")
+        print(f"{C.BLD}{C.GRN}╭{'─'*44}╮{C.RST}")
+        print(f"{C.BLD}{C.GRN}│{C.RST} {C.GRN}NOCODE-AI{C.RST} {C.WHT}V2.0.0{C.RST}           {C.GRN}│{C.RST} {C.WHT}Zyrex Official{C.RST}        {C.GRN}│{C.RST}")
+        print(f"{C.BLD}{C.GRN}╰{'─'*44}╯{C.RST}")
         
         if not s.ck():
             print(f"{C.YEL}[*] Starting Ollama...{C.RST}")
@@ -106,68 +107,63 @@ class NocodAI:
         if not s.cm():
             print(f"{C.YEL}[*] Downloading model...{C.RST}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
         
-        sub = f"{C.BLK}{C.CYN} Description:{C.RST} AI Assistant with tool execution"
-        tgl = f"{C.BLK}{C.CYN} Date:{C.RST} {s.tm}"
+        w = 44
+        h = 2
+        d = f" Date: {s.tm}"
+        print(f"\n{C.BLK}{C.CYN}╭{'─'*w}╮{C.RST}")
+        print(f"{C.BLK}{C.CYN}│{C.RST} {C.CYN}Description:{C.RST} AI Assistant with tool execution     {C.CYN}│{C.RST}")
+        print(f"{C.BLK}{C.CYN}│{C.RST} {C.CYN}{d}{' '*(w-len(d))}{C.CYN}│{C.RST}")
+        print(f"{C.BLK}{C.CYN}╰{'─'*w}╯{C.RST}")
         
-        w = 42
-        print(f"\n{C.BLK}{C.GRN}╔{'═'*w}╗{C.RST}")
-        print(f"{C.BLK}{C.GRN}║{C.RST}{sub}{' '*(w-len(sub))}{C.GRN}║{C.RST}")
-        print(f"{C.BLK}{C.GRN}║{C.RST}{tgl}{' '*(w-len(tgl))}{C.GRN}║{C.RST}")
-        print(f"{C.BLK}{C.GRN}╚{'═'*w}╝{C.RST}")
+        print(f"\n{C.BLK}{C.CYN}╭{'─'*w}╮{C.RST}")
+        print(f"{C.BLK}{C.CYN}│{C.RST} {C.CYN}Type your message or @path               {C.RST}")
+        print(f"{C.BLK}{C.CYN}│{C.RST} {C.WHT}~{' '*41}{C.RST}")
+        print(f"{C.BLK}{C.CYN}╰{'─'*w}╯{C.RST}")
         
-        print(f"\n{C.BLD}{C.CYN}╭───────────────────{C.BLK}{C.CYN} Input Message {C.BLD}{C.CYN}───────────────────╮{C.RST}")
-        print(f"{C.BLD}{C.CYN}│{C.RST} {C.CYN}Type your message or @file                 {C.BLD}{C.CYN}│{C.RST}")
-        print(f"{C.BLD}{C.CYN}│{C.RST} {C.WHT}~{C.RST}{' '*50}{C.BLD}{C.CYN}│{C.RST}")
-        print(f"{C.BLD}{C.CYN}╰───────────────────────────────────────────────────╯{C.RST}")
+        print(f"\n{C.GRN}✓ Ready!{C.RST}\n")
         
-        s.sp="""You are NocodAI, a professional AI assistant.
-RULES:
-1. LEGALITY: Only legal. REFUSE hacking, malware, piracy.
+        s.sp="""You are NocodAI.
+1. LEGAL: Only legal. REFUSE hacking/malware/piracy.
 2. TOOLS: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system.
-3. CODING: Clean code, best practices.
-4. OUTPUT: Use code blocks.
+3. CODING: Clean code.
+4. OUTPUT: Code in blocks.
 5. LANGUAGE: Same as user."""
         
-        print(f"\n{C.GRN}✓ Ready! Starting chat...{C.RST}\n")
-        
         while 1:
-            p=input(f"{C.BLK}{C.GRN}│{C.WHT} > {C.RST}")
+            p=input(f"{C.BLK}{C.CYN}│{C.WHT} > {C.RST}")
             if p.lower() in ["exit","quit","q"]: 
-                print(f"{C.CYN}[*] Goodbye!{C.RST}")
+                print(f"{C.CYN}[*] Bye!{C.RST}")
                 break
             
             s.h.append({"role":"user","content":p})
+            print(f"{C.DIM}Thinking...{C.RST}")
+            full="".join([c for c in s.gs(p,s.sp)])
             
-            print(f"\n{C.DIM}Thinking...{C.RST}")
-            full=""
-            for c in s.gs(p,s.sp): full+=c
-            
-            print(f"\n{C.BLK}{C.GRN}╭────────────────── {C.BLK}{C.CYN} Response {C.BLK}{C.GRN}──────────────────╮{C.RST}")
-            print(f"{C.BLK}{C.GRN}│{C.RST}")
+            print(f"\n{C.BLK}{C.BLU}╭{'─'*w}╮{C.RST}")
             for line in full.split('\n'):
                 if line.strip():
-                    print(f"{C.BLK}{C.GRN}│{C.RST} {C.WHT}{line}{C.RST}")
-            print(f"{C.BLK}{C.GRN}│{C.RST}")
-            print(f"{C.BLK}{C.GRN}╰───────────────────────────────────────────────────╯{C.RST}\n")
+                    print(f"{C.BLK}{C.BLU}│{C.RST} {C.WHT}{line}{' '*(w-len(line))}{C.BLK}{C.BLU}│{C.RST}")
+            print(f"{C.BLK}{C.BLU}╰{'─'*w}╯{C.RST}\n")
             
             s.h.append({"role":"assistant","content":full})
             tools = s.pt(full)
             if tools:
                 for t in tools:
                     n,a=t.get("name",""),t.get("arguments",{})
-                    print(f"\n{C.YEL}>>> Executing: {n}{C.RST}")
+                    print(f"{C.YEL}>>> {n}{C.RST}")
                     r=s.ex(n,a)
-                    print(f"\n{C.YEL}Result: {r[:500]}{C.RST}\n")
-                    s.h.append({"role":"user","content":f"Tool {n} result: {r}"})
-                    full=""
-                    for c in s.gs("Provide final answer.",s.sp): full+=c
-                    print(f"\n{C.BLK}{C.GRN}╭────────────────── {C.BLK}{C.CYN} Final {C.BLK}{C.GRN}──────────────────╮{C.RST}")
-                    print(f"{C.BLK}{C.GRN}│{C.RST} {C.WHT}{full}{C.RST}")
-                    print(f"{C.BLK}{C.GRN}╰───────────────────────────────────────────────────╯{C.RST}\n")
+                    print(f"{C.YEL}{r[:200]}{C.RST}\n")
+                    s.h.append({"role":"user","content":f"Tool {n}: {r}"})
+                    full="".join([c for c in s.gs("Final answer.",s.sp)])
+                    print(f"\n{C.BLK}{C.GRN}╭{'─'*w}╮{C.RST}")
+                    for line in full.split('\n'):
+                        if line.strip():
+                            print(f"{C.BLK}{C.GRN}│{C.RST} {C.WHT}{line}{' '*(w-len(line))}{C.BLK}{C.GRN}│{C.RST}")
+                    print(f"{C.BLK}{C.GRN}╰{'─'*w}╯{C.RST}\n")
             
-            print(f"{C.BLD}{C.CYN}╭───────────────────{C.BLK}{C.CYN} Input Message {C.BLD}{C.CYN}───────────────────╮{C.RST}")
-            print(f"{C.BLD}{C.CYN}│{C.RST} {C.CYN}Type your message or @file                 {C.BLD}{C.CYN}│{C.RST}")
-            print(f"{C.BLD}{C.CYN}│{C.RST} {C.WHT}~{C.RST}{' '*50}{C.BLD}{C.CYN}│{C.RST}")
-            print(f"{C.BLD}{C.CYN}╰───────────────────────────────────────────────────╯{C.RST}")
+            print(f"{C.BLK}{C.CYN}╭{'─'*w}╮{C.RST}")
+            print(f"{C.BLK}{C.CYN}│{C.RST} {C.CYN}Type your message or @path               {C.RST}")
+            print(f"{C.BLK}{C.CYN}│{C.RST} {C.WHT}~{' '*41}{C.RST}")
+            print(f"{C.BLK}{C.CYN}╰{'─'*w}╯{C.RST}")
 
 if __name__=="__main__": NocodAI().run()
