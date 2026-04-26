@@ -97,7 +97,7 @@ class NocodAI:
             time.sleep(3)
         if not s.cm():
             print(f"{Colors.TOOL}DL model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
-        sp=""
+sp="You are NocodAI, a helpful AI assistant. Respond in the SAME LANGUAGE the user uses. If they write in Indonesian, respond in Indonesian. If in English, respond in English. If in Chinese, respond in Chinese. Always match their language."
         print(f"{Colors.SUCCESS}READY! Just type and chat:{Colors.RESET}\n")
         while 1:
             try:
