@@ -119,18 +119,26 @@ class Config:
             "default_provider": "ollama",
             "default_model": "auto",
             "agents": {
-                "primary": {"name": "primary", "description": "Main coding assistant - UNLIMITED", "model": "auto", "temperature": 0.7, "max_steps": 999999999, "unlimited": True},
-                "explore": {"name": "explore", "description": "Code exploration - UNLIMITED", "model": "auto", "temperature": 0.3, "unlimited": True},
-                "code": {"name": "code", "description": "Advanced coding expert - UNLIMITED", "model": "auto", "temperature": 0.5, "unlimited": True}
+                "primary": {"name": "primary", "description": "Main coding assistant - UNLIMITED PERMANENT", "model": "auto", "temperature": 0.7, "max_steps": 999999999, "unlimited": True, "no_quota": True, "no_rate_limit": True, "infinite_access": True},
+                "explore": {"name": "explore", "description": "Code exploration - UNLIMITED PERMANENT", "model": "auto", "temperature": 0.3, "unlimited": True, "no_quota": True, "no_rate_limit": True},
+                "code": {"name": "code", "description": "Advanced coding expert - UNLIMITED PERMANENT", "model": "auto", "temperature": 0.5, "unlimited": True, "no_quota": True, "no_rate_limit": True}
             },
-            "context_size": 100000000,
-            "max_tokens": 100000000,
+            "context_size": 999999999,
+            "max_tokens": 999999999,
             "db_path": os.path.expanduser("~/.nocode-ai/sessions.db"),
             "permanent": True,
             "unlimited": True,
             "no_quota": True,
             "no_rate_limit": True,
-            "infinite_access": True
+            "infinite_access": True,
+            "no_billing": True,
+            "no_subscription": True,
+            "free_forever": True,
+            "all_ai_access": True,
+            "any_api_key": True,
+            "no_monthly_limit": True,
+            "no_daily_limit": True,
+            "no_hourly_limit": True
         }
         s.cfg = {}
         s.load()
@@ -182,11 +190,11 @@ class SessionDB:
         s.conn.execute("UPDATE sessions SET updated_at=? WHERE id=?", (int(time.time()), sid))
         s.conn.commit()
 
-    def get_messages(s, sid, limit=999999):
+    def get_messages(s, sid, limit=999999999):
         cur = s.conn.execute("SELECT role, content FROM messages WHERE session_id=? ORDER BY timestamp LIMIT ?", (sid, limit))
         return [{"role": r["role"], "content": r["content"]} for r in cur.fetchall()]
 
-    def list_sessions(s, limit=100):
+    def list_sessions(s, limit=999999):
         cur = s.conn.execute("SELECT id, agent, created_at FROM sessions ORDER BY updated_at DESC LIMIT ?", (limit,))
         return [dict(r) for r in cur.fetchall()]
 
@@ -372,15 +380,14 @@ class NocodeAI:
         payload = {
             "model": model,
             "messages": messages,
-            "max_tokens": 100000,
+            "max_tokens": 999999999,
             "temperature": temperature
         }
-        r = requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=600)
+        r = requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=999999)
         return r.json()["choices"][0]["message"]["content"]
 
     def chat_anthropic(s, base_url, api_key, model, messages, temperature=0.7):
         headers = {"x-api-key": api_key, "anthropic-version": "2023-06-01", "Content-Type": "application/json"}
-        # Convert messages to Anthropic format
         msgs = []
         for m in messages:
             if m["role"] == "system": continue
@@ -389,19 +396,19 @@ class NocodeAI:
         payload = {
             "model": model,
             "messages": msgs,
-            "max_tokens": 100000,
+            "max_tokens": 999999999,
             "temperature": temperature,
             "system": system
         }
-        r = requests.post(f"{base_url}/v1/messages", headers=headers, json=payload, timeout=600)
+        r = requests.post(f"{base_url}/v1/messages", headers=headers, json=payload, timeout=999999)
         return r.json()["content"][0]["text"]
 
     def chat_ollama(s, host, model, messages, temperature=0.7):
         r = requests.post(
             f"{host}/api/chat",
             json={"model": model, "messages": messages, "stream": False,
-                  "options": {"temperature": temperature, "num_predict": 100000, "num_ctx": 100000}},
-            timeout=600
+                  "options": {"temperature": temperature, "num_predict": 999999999, "num_ctx": 999999999}},
+            timeout=999999
         )
         return r.json().get("message", {}).get("content", "")
 
@@ -413,30 +420,38 @@ class NocodeAI:
 
         msgs = []
         if system_prompt: msgs.append({"role": "system", "content": system_prompt})
-        msgs.extend(s.hist[-999999:])
+        msgs.extend(s.hist)  # No limit on history
         msgs.append({"role": "user", "content": msg})
 
         try:
-            # Auto-fallback: kalau nggak ada API key, pake Ollama lokal
-            if prov_id != "ollama" and not prov.get("api_key"):
-                prov_id = "ollama"
-                prov = s.cfg.get("providers", {}).get("ollama")
-                s.cfg.set("default_provider", "ollama")
-                print(f"{Theme.YELLOW}No API key found, using Ollama local...{Theme.RESET}")
+            # Support ALL AI providers tanpa batasan
+            if not prov or (prov_id != "ollama" and not prov.get("api_key")):
+                # Auto-detect working provider
+                for pid in ["ollama", "openai", "anthropic", "gemini", "groq", "deepseek", "custom"]:
+                    p = s.cfg.get("providers", {}).get(pid)
+                    if p and (pid == "ollama" or p.get("api_key")):
+                        prov_id = pid
+                        prov = p
+                        s.cfg.set("default_provider", pid)
+                        break
+                if prov_id == "ollama":
+                    print(f"{Theme.YELLOW}Using Ollama local (no API key needed)...{Theme.RESET}")
 
             if prov and prov.get("type") == "ollama":
                 return s.chat_ollama(prov.get("host", "http://localhost:11434"), model, msgs, agent.get("temperature", 0.7))
             elif prov and prov.get("type") == "anthropic":
                 return s.chat_anthropic(prov["base_url"], prov["api_key"], model, msgs, agent.get("temperature", 0.7))
             else:
-                return s.chat_openai_compatible(prov["base_url"], prov["api_key"], model, msgs, agent.get("temperature", 0.7))
+                # Universal OpenAI-compatible endpoint (works with ANY provider)
+                base_url = prov.get("base_url", "https://api.openai.com/v1")
+                api_key = prov.get("api_key", "")
+                return s.chat_openai_compatible(base_url, api_key, model, msgs, agent.get("temperature", 0.7))
         except Exception as e:
             # Auto-retry dengan Ollama kalau API gagal
             if prov_id != "ollama":
                 try:
                     return s.chat_ollama("http://localhost:11434", model, msgs, agent.get("temperature", 0.7))
-                except:
-                    pass
+                except: pass
             return f"Error: {str(e)}"
 
     def parse_tools(s, txt):
