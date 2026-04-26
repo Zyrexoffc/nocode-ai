@@ -87,40 +87,40 @@ class NocodAI:
         except Exception as e: return f"Er:{e}"
     
     def run(s):
-        print(f"""
-{Colors.BOLD}{Colors.INFO}  ██████╗ ███████╗███████╗██╗     ██╗███╗   ███╗
-{Colors.INFO}  ██╔══██╗██╔════╝██╔════╝██║     ██║████╗  ████║
-{Colors.INFO}  ██║  ██║█████╗  █████╗  ██║     ██║██╔██╗ ██╔██║
-{Colors.INFO}  ██║  ██║██╔══╝  ██╔══╝  ██║     ██║██║╚███║╚██║
-{Colors.INFO}  ██████╔╝███████╗███████╗███████╗██║██║ ╚████║██║
-{Colors.INFO}  ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚═╝
-{Colors.INFO}  ╔══════════════════════════════════════════╗
-{Colors.INFO}  ║{Colors.SUCCESS}     NOCODE-AI v1.7 - PRO{Colors.INFO}              ║
-{Colors.INFO}  ║{Colors.USER}     Created by Zyrex Official{Colors.INFO}          ║
-{Colors.INFO}  ╚══════════════════════════════════════════╝
-{Colors.RESET}""")
+        print(f"""{Colors.INFO}
+▝▜▄     {Colors.SUCCESS}NOCODE-AI V2.0.0{Colors.INFO}
+   ▝▜▄
+  ▗▟▀    {Colors.USER}Created By Zyrex Official{Colors.SUCCESS} ✔
+ ▝▀
+{Colors.RESET}
+{Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
+{Colors.TOOL}Description:{Colors.RESET} 
+{Colors.TOOL}Time:{Colors.RESET} 
+{Colors.TOOL}Model-AI:{Colors.RESET} %s
+{Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
+{Colors.INFO}Shift+Tab to accept edits
+{Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
+{Colors.INFO}> {Colors.USER}Type your message or @path/to/file
+{Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
+{Colors.INFO}Workspace ({Colors.USER}%s{Colors.INFO})                                                                                                                                                                      
+{Colors.USER}Developer                                                                                                                                                                                  
+ {Colors.INFO}~{Colors.RESET}                                                           
+""" % (s.model, s.ws))
         if not s.ck():
             print(f"{Colors.ERROR}[*] Starting Ollama...{Colors.RESET}")
             subprocess.Popen(["ollama","serve"],stdout=open(os.devnull,"w"),stderr=open(os.devnull,"w"))
             time.sleep(3)
         if not s.cm():
             print(f"{Colors.TOOL}[*] Downloading model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
-        sp="""You are NocodAI, a professional AI assistant with these rules:
-LEGALITY: Only assist with LEGAL activities. Refuse: hacking, malware, illegal, piracy, fraud.
-FILE ACCESS: You have root access. Read/edit files only when user explicitly asks.
-TOOLS: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system.
-CODING: Write clean, efficient code with best practices.
-LANGUAGE: Respond in the SAME LANGUAGE user uses."""
-        s.ws = os.getcwd()
-        print(f"""
-{Colors.BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-{Colors.SUCCESS}[✓] Ready! Type your message below:
-{Colors.BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-{Colors.RESET}
-""")
+        sp="""You are NocodAI, a professional AI assistant.
+LEGALITY: Only legal activities. Refuse hacking, malware, illegal.
+FILE ACCESS: Root access. Read/edit files when user asks.
+CODING: Clean code, best practices.
+LANGUAGE: Respond in SAME LANGUAGE user uses."""
+        print(f"{Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────{Colors.RESET}\n")
         while 1:
             try:
-                p=input(f"{Colors.INFO}@{Colors.USER}%s{Colors.INFO} > {Colors.RESET}" % s.ws)
+                p=input(f"{Colors.INFO}> {Colors.RESET}")
                 if p.lower() in ["exit","quit","q"]: print(f"{Colors.INFO}[*] Goodbye!{Colors.RESET}"); break
                 s.h.append({"role":"user","content":p})
                 full=""
