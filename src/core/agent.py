@@ -86,13 +86,12 @@ class NocodAI:
             return f"U:{n}"
         except Exception as e: return f"Er:{e}"
     
-    def run(s):
+def run(s):
         print(f"""{Colors.INFO}
 ▝▜▄     {Colors.SUCCESS}NOCODE-AI V2.0.0{Colors.INFO}
    ▝▜▄
   ▗▟▀    {Colors.USER}Created By Zyrex Official{Colors.SUCCESS} ✔
  ▝▀
-{Colors.RESET}
 {Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
 {Colors.TOOL}Description:{Colors.RESET} 
 {Colors.TOOL}Time:{Colors.RESET} 
@@ -102,9 +101,9 @@ class NocodAI:
 {Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
 {Colors.INFO}> {Colors.USER}Type your message or @path/to/file
 {Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
-{Colors.INFO}Workspace ({Colors.USER}%s{Colors.INFO})                                                                                                                                                                      
-{Colors.USER}Developer                                                                                                                                                                                  
- {Colors.INFO}~{Colors.RESET}                                                           
+{Colors.INFO}Workspace ({Colors.USER}%s{Colors.INFO})                                                                                                                                      
+{Colors.INFO}Script (nocode-ai){Colors.INFO}                                                                  
+ {Colors.USER}~{Colors.RESET}                                                           
 """ % (s.model, s.ws))
         if not s.ck():
             print(f"{Colors.ERROR}[*] Starting Ollama...{Colors.RESET}")
