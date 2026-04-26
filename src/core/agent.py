@@ -11,6 +11,7 @@ class Colors:
     RESET = "\033[0m"
     BOLD = "\033[1m"
     DIM = "\033[90m"
+    BG = "\033[40m"
 
 class NocodAI:
     def __init__(s):
@@ -88,22 +89,34 @@ class NocodAI:
         except Exception as e: return f"Er:{e}"
     
     def run(s):
-        bar = "───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
+        bar = "───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
         
-        print(f"\n{Colors.INFO}▝▜▄     {Colors.SUCCESS}NOCODE-AI V1.0.0{Colors.INFO}")
+        print(f"\n{Colors.BG}{Colors.INFO}▝▜▄     {Colors.SUCCESS}NOCODE-AI V1.0.0{Colors.INFO}")
         print(f"{Colors.INFO}   ▝▜▄")
         print(f"{Colors.INFO}  ▗▟▀    {Colors.USER}Created By Zyrex Official{Colors.SUCCESS} ✔")
-        print(f"{Colors.INFO} ▝▀")
+        print(f"{Colors.INFO} ▝▀{Colors.RESET}")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.BOLD}{bar}{Colors.RESET}")
         print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
         print(f"{Colors.TOOL}Description:{Colors.RESET}")
         print(f"{Colors.TOOL}Time:{Colors.RESET} {s.tm}")
         print(f"{Colors.TOOL}model-ai:{Colors.RESET} {s.model}")
         print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
         print(f"{Colors.DIM}Shift+Tab to accept edits{Colors.RESET}")
         print(f"{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
         print(f"{Colors.INFO}║ {Colors.USER}Type your message or @path/to file{Colors.RESET}")
         print(f"{Colors.BOLD}{bar}{Colors.RESET}")
-        print(f"{Colors.INFO}Workspace ({Colors.USER}{s.ws}{Colors.INFO})")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.INFO}Workspace ({Colors.USER}%s{Colors.INFO})" % s.ws)
         print(f"{Colors.INFO}Script (nocode-ai){Colors.INFO}")
         print(f"{Colors.USER}~{Colors.RESET}")
         print(f"{Colors.BOLD}{bar}{Colors.RESET}")
@@ -115,27 +128,37 @@ class NocodAI:
         if not s.cm():
             print(f"{Colors.TOOL}[*] Downloading model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
         
-        s.sp="""You are NocodAI.
+        s.sp="""You are NocodAI, a professional AI assistant.
 RULES:
-1. LEGALITY: Only legal.
+1. LEGALITY: Only legal. REFUSE hacking, malware, piracy.
 2. TOOLS: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system.
-3. CODING: Clean code.
-4. LANGUAGE: Same as user."""
+3. CODING: Clean code, best practices.
+4. OUTPUT: Use code blocks.
+5. LANGUAGE: Same as user (Indonesian/English/etc)."""
         
         while 1:
-            p=input(f"{Colors.INFO}│{Colors.USER} > {Colors.RESET}")
+            p=input(f"{Colors.BG}{Colors.INFO}║{Colors.USER} > {Colors.RESET}")
             if p.lower() in ["exit","quit","q"]: break
             s.h.append({"role":"user","content":p})
-            print(f"{Colors.DIM}Thinking...{Colors.RESET}")
+            
+            print(f"\n{Colors.DIM}Thinking...{Colors.RESET}")
             full=""
             for c in s.gs(p,s.sp): full+=c
-            print(f"{Colors.USER}%s{Colors.RESET}" % full)
+            print(f"\n{Colors.BG}{Colors.USER}%s{Colors.RESET}\n" % full)
+            
             s.h.append({"role":"assistant","content":full})
             tools = s.pt(full)
-            for t in tools:
-                n,a=t.get("name",""),t.get("arguments",{})
-                r=s.ex(n,a)
-                for c in s.gs(f"Tool {n} result: {r}",s.sp):
-                    print(f"{Colors.USER}%s{Colors.RESET}" % c)
+            if tools:
+                for t in tools:
+                    n,a=t.get("name",""),t.get("arguments",{})
+                    print(f"\n{Colors.TOOL}>>> Executing: {n}{Colors.RESET}")
+                    r=s.ex(n,a)
+                    print(f"\n{Colors.TOOL}Result: {r[:500]}{Colors.RESET}\n")
+                    s.h.append({"role":"user","content":f"Tool {n} result: {r}"})
+                    full=""
+                    for c in s.gs("Provide final answer based on tool result.",s.sp): full+=c
+                    print(f"{Colors.USER}%s{Colors.RESET}" % full)
+            
+            print(f"{Colors.BOLD}{bar}{Colors.RESET}")
 
 if __name__=="__main__": NocodAI().run()
