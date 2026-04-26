@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-NocodAI v3.0 - Upgraded with NocodeAi System Logic
-Features: Multi-agent, advanced tools, session DB, provider support, permission system
+NocodAI v3.0 - Revamped UI with OpenCode Design System
+Features: Modern TUI, Unicode boxes, OpenCode color theme, multi-agent, session DB
 """
 import os, sys, json, subprocess, requests, re, time, datetime, threading, signal, hashlib, sqlite3, glob, uuid
 from pathlib import Path
@@ -9,11 +9,158 @@ from typing import Dict, List, Optional, Any
 
 VERSION = "3.0.0"
 
-class Colors:
-    K = "\033[40m"; D = "\033[100m"; W = "\033[97m"; H = "\033[90m"
-    R = "\033[41m"; G = "\033[42m"; Y = "\033[43m"; B = "\033[44m"
-    M = "\033[45m"; C = "\033[46m"; N = "\033[0m"; BOLD = "\033[1m"
+# OpenCode Dark Theme Colors (from opencode theme)
+class Theme:
+    # Backgrounds
+    BG1 = "\033[48;5;232m"      # darkStep1 #0a0a0a
+    BG2 = "\033[48;5;233m"        # darkStep2 #141414
+    BG3 = "\033[48;5;234m"        # darkStep3 #1e1e1e
+    BG4 = "\033[48;5;235m"        # darkStep4 #282828
+    BG5 = "\033[48;5;236m"        # darkStep5 #323232
+    # Foregrounds
+    FG = "\033[38;5;255m"         # darkStep12 #eeeeee
+    FG_DIM = "\033[38;5;244m"     # darkStep11 #808080
+    FG_GRAY = "\033[38;5;241m"    # darkStep8 #606060
+    # Accents
+    ACCENT = "\033[38;5;216m"     # darkStep9 #fab283
+    ACCENT2 = "\033[38;5;217m"    # darkStep10 #ffc09f
+    GREEN = "\033[38;5;114m"      # darkGreen #7fd88f
+    CYAN = "\033[38;5;117m"       # darkCyan #56b6c2
+    YELLOW = "\033[38;5;221m"     # darkYellow #e5c07b
+    RED = "\033[38;5;203m"        # darkRed #e06c75
+    ORANGE = "\033[38;5;208m"     # darkOrange #f5a742
+    SECONDARY = "\033[38;5;75m"   # darkSecondary #5c9cf5
+    # Styles
+    BOLD = "\033[1m"
+    DIM = "\033[2m"
     ITALIC = "\033[3m"
+    RESET = "\033[0m"
+    # Unicode box drawing
+    TL = "╭"; TR = "╮"; BL = "╰"; BR = "╯"
+    H = "─"; V = "│"
+    # Clear
+    CLEAR = "\033[2J\033[H"
+
+def get_terminal_width():
+    try:
+        return os.get_terminal_size().columns
+    except:
+        return 80
+
+def box_lines(text, width, align="left"):
+    if align == "center":
+        pad = (width - len(text)) // 2
+        return " " * pad + text + " " * (width - pad - len(text))
+    return text + " " * (width - len(text))
+
+class UI:
+    @staticmethod
+    def clear():
+        print(Theme.CLEAR, end="")
+
+    @staticmethod
+    def header(title, subtitle="", width=None):
+        w = width or get_terminal_width()
+        print(Theme.BG1 + Theme.FG + " " * w)
+        # Title line
+        t = f" {Theme.BOLD}{title}{Theme.RESET}{Theme.BG1}{Theme.FG}"
+        print(Theme.BG1 + Theme.FG + box_lines(t, w-1) + " ")
+        if subtitle:
+            s = f" {Theme.DIM}{subtitle}{Theme.RESET}"
+            print(Theme.BG2 + Theme.FG_DIM + box_lines(s, w-1) + " ")
+        print(Theme.BG1 + " " * w + Theme.RESET)
+        print()
+
+    @staticmethod
+    def box(title, lines, width=None, border_color=None, title_color=None):
+        w = width or get_terminal_width()
+        bc = border_color or Theme.FG_GRAY
+        tc = title_color or Theme.ACCENT
+        # Top border
+        print(f"{Theme.BG3}{bc}{Theme.TL}{Theme.H * (w-2)}{Theme.TR}{Theme.RESET}")
+        # Title
+        if title:
+            t = f"{Theme.BG3}{tc} {title} {Theme.RESET}{Theme.BG3}{bc}{' ' * (w - len(title) - 3)}{Theme.RESET}"
+            print(f"{Theme.BG3}{bc}{Theme.V}{Theme.RESET}{t[:-1]}{Theme.BG3}{bc}{Theme.V}{Theme.RESET}")
+            print(f"{Theme.BG3}{bc}{Theme.H * (w-2)}{Theme.RESET}")
+        # Content
+        for line in lines[:30]:
+            l = line[:w-4] if len(line) > w-4 else line
+            pad = " " * (w - len(l) - 4)
+            print(f"{Theme.BG3}{bc}{Theme.V}{Theme.RESET} {Theme.FG}{l}{Theme.RESET}{Theme.BG3}{pad} {Theme.BG3}{bc}{Theme.V}{Theme.RESET}")
+        # Bottom border
+        print(f"{Theme.BG3}{bc}{Theme.BL}{Theme.H * (w-2)}{Theme.BR}{Theme.RESET}")
+        print()
+
+    @staticmethod
+    def message(role, content, width=None):
+        w = width or get_terminal_width()
+        if role == "user":
+            tag = f"{Theme.BOLD}{Theme.GREEN}▶ YOU{Theme.RESET}"
+        elif role == "assistant":
+            tag = f"{Theme.BOLD}{Theme.CYAN}◉ AI{Theme.RESET}"
+        else:
+            tag = f"{Theme.BOLD}{Theme.YELLOW}ℹ {role.upper()}{Theme.RESET}"
+        print(f"\n{tag} {Theme.DIM}{'─' * (w - len(role) - 5)}{Theme.RESET}")
+        # Print content wrapped
+        for line in content.split("\n")[:50]:
+            if line.strip():
+                print(f"  {Theme.FG}{line}{Theme.RESET}")
+        print()
+
+    @staticmethod
+    def tool(name, args, result=None, width=None):
+        w = width or get_terminal_width()
+        print(f"\n{Theme.BG4}{Theme.BOLD}{Theme.ORANGE} ⚡ TOOL: {name}{Theme.RESET} {Theme.DIM}{'─' * (w - len(name) - 12)}{Theme.RESET}")
+        if args:
+            print(f"  {Theme.FG_DIM}Args:{Theme.RESET} {Theme.FG}{json.dumps(args, ensure_ascii=False)[:200]}{Theme.RESET}")
+        if result:
+            r = str(result)[:500]
+            print(f"  {Theme.GREEN}→{Theme.RESET} {Theme.FG}{r}{Theme.RESET}")
+        print()
+
+    @staticmethod
+    def status(items, width=None):
+        w = width or get_terminal_width()
+        print(Theme.BG2 + " " * w)
+        for k, v in items:
+            line = f"  {Theme.BOLD}{Theme.ACCENT}{k}:{Theme.RESET} {Theme.FG}{v}{Theme.RESET}"
+            print(Theme.BG2 + line + " " * (w - len(line) + Theme.BG2.count('\033')*10))
+        print(Theme.BG2 + " " * w + Theme.RESET)
+        print()
+
+    @staticmethod
+    def input_prompt(agent, width=None):
+        w = width or get_terminal_width()
+        print(Theme.BG3 + " " * w)
+        ag = f" {Theme.BOLD}{Theme.CYAN}{agent}{Theme.RESET}{Theme.BG3}"
+        print(f"{Theme.BG3}{ag} {' ' * (w - len(agent) - 2)}")
+        print(Theme.BG3 + Theme.FG_DIM + " " * w)
+        print(f"{Theme.BG3}{Theme.BOLD}{Theme.FG} > {Theme.RESET}", end="")
+        print(Theme.BG3 + " " * (w - 3) + Theme.RESET)
+
+    @staticmethod
+    def separator(width=None):
+        w = width or get_terminal_width()
+        print(f"{Theme.DIM}{'─' * w}{Theme.RESET}")
+
+    @staticmethod
+    def error(msg, width=None):
+        w = width or get_terminal_width()
+        print(f"\n{Theme.BG1}{Theme.BOLD}{Theme.RED} ✘ ERROR {Theme.RESET}{Theme.BG1} {Theme.FG}{msg}{Theme.RESET}")
+        print()
+
+    @staticmethod
+    def success(msg, width=None):
+        w = width or get_terminal_width()
+        print(f"\n{Theme.BG1}{Theme.BOLD}{Theme.GREEN} ✔ {msg}{Theme.RESET}")
+        print()
+
+    @staticmethod
+    def thinking(width=None):
+        w = width or get_terminal_width()
+        print(f"\n{Theme.DIM} ⏳ Thinking...{Theme.RESET}\n")
+
 
 class Config:
     def __init__(s):
@@ -53,7 +200,6 @@ class Config:
     def load(s):
         try:
             s.cfg = json.loads(open(s.path).read())
-            # Merge with defaults to add new keys
             for k, v in s.default.items():
                 if k not in s.cfg:
                     s.cfg[k] = v
@@ -70,6 +216,7 @@ class Config:
     def set(s, k, v):
         s.cfg[k] = v
         s.save()
+
 
 class SessionDB:
     def __init__(s, db_path):
@@ -123,24 +270,22 @@ class SessionDB:
     def close(s):
         s.conn.close()
 
+
 class PermissionSystem:
     def __init__(s, rules=None):
         s.rules = rules or {"*": "allow"}
 
     def check(s, tool_name, path=None):
-        # Check specific path rules first
         if path and f"{tool_name}:{path}" in s.rules:
             return s.rules[f"{tool_name}:{path}"]
-        # Check tool-specific rule
         if tool_name in s.rules:
             return s.rules[tool_name]
-        # Fallback to wildcard
         return s.rules.get("*", "deny")
 
     def prompt_permission(s, tool_name, args):
-        print(f"\n{Colors.Y}Permission required for {tool_name}{Colors.N}")
+        print(f"\n{Theme.YELLOW}Permission required for {tool_name}{Theme.RESET}")
         print(f"Args: {json.dumps(args, indent=2)}")
-        resp = input(f"{Colors.C}Allow? [y/N/a(always)/d(deny)]: ").strip().lower()
+        resp = input(f"{Theme.CYAN}Allow? [y/N/a(always)/d(deny)]: ").strip().lower()
         if resp == "a":
             s.rules[tool_name] = "allow"
             return True
@@ -148,6 +293,7 @@ class PermissionSystem:
             s.rules[tool_name] = "deny"
             return False
         return resp == "y"
+
 
 class ToolRegistry:
     def __init__(s, permission: PermissionSystem, cfg: Config):
@@ -235,7 +381,6 @@ class ToolRegistry:
         path = os.path.expanduser(args.get("path", "."))
         results = []
         for root, dirs, files in os.walk(path):
-            # Skip node_modules, .git, etc.
             dirs[:] = [d for d in dirs if d not in [".git", "node_modules", "__pycache__"]]
             for f in files:
                 fp = os.path.join(root, f)
@@ -264,7 +409,6 @@ class ToolRegistry:
 
     def exec_codesearch(s, args):
         query = args.get("query", "")
-        # Simulated codesearch (would use Exa API in production)
         return f"Codesearch for '{query}' - integrate with Exa API for real results"
 
     def exec_webfetch(s, args):
@@ -277,7 +421,6 @@ class ToolRegistry:
 
     def exec_websearch(s, args):
         query = args.get("query", "")
-        # Simulated websearch (would use Exa API in production)
         return f"Websearch for '{query}' - integrate with Exa API for real results"
 
     def execute(s, name, args):
@@ -287,6 +430,7 @@ class ToolRegistry:
             return s.tools[name](args)
         except Exception as e:
             return f"Tool error: {e}"
+
 
 class AgentManager:
     def __init__(s, cfg: Config):
@@ -301,8 +445,8 @@ class AgentManager:
 
     def generate_prompt(s, agent_name, description):
         agent = s.get(agent_name)
-        # Simulated prompt generation (nocode-ai uses generate.txt)
         return f"You are {agent['name']}, {agent.get('description', '')}. {description}"
+
 
 class NocodAI:
     def __init__(s):
@@ -313,52 +457,15 @@ class NocodAI:
         s.agents = AgentManager(s.cfg)
         s.hist = []
         s.running = True
-        s.w = 80
         s.current_session = None
         s.current_agent = "primary"
         signal.signal(signal.SIGINT, s.signal_handler)
 
     def signal_handler(s, sig, frame):
-        print(f"\n{Colors.Y}Bye!{Colors.N}")
+        print(f"\n{Theme.YELLOW}Bye!{Theme.RESET}")
         s.running = False
         s.db.close()
         sys.exit(0)
-
-    def pr(s, c, t):
-        print(f"{c}{t}{Colors.N}")
-
-    def draw_box(s, title, lines, bg=Colors.D, title_color=Colors.G):
-        print(bg, end="")
-        sp = " " * s.w
-        print(sp)
-        if title:
-            t = f" {title} "
-            print(title_color + t + (" " * (s.w - len(t))))
-        for ln in lines[:25]:
-            print(f" {Colors.H}{ln[:s.w-2]}{' ' * (s.w - min(len(ln)+2, s.w))}")
-        print(sp + Colors.N)
-        print()
-
-    def header(s):
-        os.system("clear")
-        print(f"{Colors.K}{Colors.D}", end="")
-        sp = " " * s.w
-        print(sp)
-        title = f"  {Colors.BOLD}NOCOD.AI v{VERSION}{Colors.N} - Upgraded with NocodeAi Logic"
-        print(title + " " * max(0, s.w - len(title) + 17))
-        print(sp + Colors.N)
-        print()
-
-    def input_area(s, placeholder=""):
-        print(f"{Colors.K}{Colors.D}", end="")
-        sp = " " * s.w
-        print(sp)
-        print(f"  {Colors.C}Message (/{s.current_agent}){Colors.W} {' ' * 60}")
-        print(sp)
-        p = f"  > {placeholder}" if placeholder else "  > "
-        print(p + " " * max(0, s.w - len(p)))
-        print(sp + Colors.N)
-        print()
 
     def check_provider(s, provider_id="ollama"):
         prov = s.cfg.get("providers", {}).get(provider_id)
@@ -393,7 +500,6 @@ class NocodAI:
         msgs = []
         if system_prompt:
             msgs.append({"role": "system", "content": system_prompt})
-        # Add session history
         msgs.extend(s.hist[-agent.get("max_context", 20):])
         msgs.append({"role": "user", "content": msg})
 
@@ -415,7 +521,6 @@ class NocodAI:
                 )
                 return r.json().get("message", {}).get("content", "")
             else:
-                # OpenAI compatible
                 headers = {"Authorization": f"Bearer {prov['api_key']}"}
                 r = requests.post(
                     f"{prov['base_url']}/chat/completions",
@@ -434,7 +539,6 @@ class NocodAI:
 
     def parse_tools(s, txt):
         tools = []
-        # Match JSON-like tool calls: {"name": "...", "arguments": {...}}
         for m in re.finditer(r'\{\s*"name"\s*:\s*"([^"]+)"\s*,\s*"arguments"\s*:\s*(\{[^}]*\})\s*\}', txt):
             try:
                 name = m.group(1)
@@ -445,69 +549,66 @@ class NocodAI:
         return tools
 
     def run(s):
-        s.header()
+        UI.clear()
+        UI.header(f"NOCOD.AI v{VERSION}", "OpenCode-Style AI Assistant • Multi-Agent • Session DB • Permission System")
+
         prov_id = s.cfg.get("default_provider", "ollama")
         if not s.check_provider(prov_id):
-            s.draw_box("ERROR", [f"Provider {prov_id} not running!", "Start it or check config"], Colors.K+Colors.R, Colors.R)
+            UI.error(f"Provider '{prov_id}' not running! Start it or check config.")
             return
 
         models = s.get_models(prov_id)
         s.cfg.set("available_models", models)
         agent = s.agents.get(s.current_agent)
 
-        s.draw_box("CONNECTED", [
-            f"Provider: {prov_id}",
-            f"Agent: {s.current_agent}",
-            f"Model: {agent.get('model')}",
-            f"Context: {s.cfg.get('context_size')}",
-            f"Sessions: {len(s.db.list_sessions())}"
-        ], Colors.K+Colors.D, Colors.G)
-        print()
+        UI.status([
+            ("Provider", prov_id),
+            ("Agent", s.current_agent),
+            ("Model", agent.get("model")),
+            ("Context", str(s.cfg.get("context_size"))),
+            ("Sessions", str(len(s.db.list_sessions())))
+        ])
 
-        # Create or load session
         if not s.current_session:
             s.current_session = s.db.create_session(s.current_agent)
+
         system_prompt = s.agents.generate_prompt(s.current_agent,
             "Available tools: " + ", ".join(s.tools.tools.keys()))
 
-        s.input_area()
+        UI.separator()
 
         while s.running:
             try:
-                msg = input(f"{Colors.W}> ").strip()
+                msg = input(f"{Theme.BOLD}{Theme.FG} > {Theme.RESET}").strip()
             except EOFError:
                 break
 
             if not msg:
                 continue
             if msg.lower() in ["exit", "quit", "q"]:
-                print(f"{Colors.G}Bye!{Colors.N}")
+                print(f"\n{Theme.GREEN}Goodbye!{Theme.RESET}\n")
                 break
             if msg.startswith("/"):
                 s.handle_command(msg)
                 continue
 
-            print(f"\n{Colors.H}Thinking...{Colors.N}\n")
+            UI.thinking()
             resp = s.chat(msg, system_prompt)
 
-            # Save to history and DB
             s.hist.append({"role": "user", "content": msg})
             s.hist.append({"role": "assistant", "content": resp})
             s.db.add_message(s.current_session, "user", msg)
             s.db.add_message(s.current_session, "assistant", resp)
 
-            s.draw_box("RESPONSE", resp.split("\n")[:20], Colors.K+Colors.Y, Colors.Y)
+            UI.message("assistant", resp)
 
-            # Execute tool calls
             tools = s.parse_tools(resp)
             if tools:
                 for t in tools:
-                    print(f"{Colors.C}>>> {t['name']}{Colors.N}")
                     result = s.tools.execute(t["name"], t["arguments"])
-                    print(result[:500])
-                    print()
+                    UI.tool(t["name"], t["arguments"], result)
 
-            s.input_area()
+            UI.separator()
 
     def handle_command(s, cmd):
         c = cmd[1:].split()
@@ -517,65 +618,72 @@ class NocodAI:
         args = c[1:]
 
         if cmd == "help":
-            print(f"""
-{Colors.C}Commands:{Colors.N}
-   /help     - Show this help
-   /agent    - Switch agent (primary/explore)
-   /model    - List/change model
-   /context  - Set context size
-   /temp     - Set temperature
-   /clear    - Clear history
-   /sessions - List sessions
-   /session  - Switch session
-   /exit     - Exit
-""")
+            UI.box("COMMANDS", [
+                "/help     - Show this help",
+                "/agent    - Switch agent (primary/explore)",
+                "/model    - List/change model",
+                "/context  - Set context size",
+                "/temp     - Set temperature",
+                "/clear    - Clear history",
+                "/sessions - List sessions",
+                "/session  - Switch session",
+                "/exit     - Exit"
+            ], title_color=Theme.CYAN)
+
         elif cmd == "agent":
             if args:
                 if args[0] in s.agents.agents:
                     s.current_agent = args[0]
-                    print(f"Switched to agent: {args[0]}")
+                    UI.success(f"Switched to agent: {args[0]}")
                 else:
-                    print(f"Available agents: {', '.join(s.agents.agents.keys())}")
+                    UI.error(f"Available agents: {', '.join(s.agents.agents.keys())}")
             else:
-                print(f"Current: {s.current_agent}")
-                for a in s.agents.list():
-                    print(f"  - {a['name']}: {a.get('description', '')}")
+                UI.box("AGENTS", [f"{a['name']}: {a.get('description', '')}" for a in s.agents.list()], title_color=Theme.SECONDARY)
+
         elif cmd == "model":
             if args:
                 agent = s.agents.get(s.current_agent)
                 agent["model"] = args[0]
                 s.cfg.set("agents", s.agents.agents)
-                print(f"Model changed to: {args[0]}")
+                UI.success(f"Model changed to: {args[0]}")
             else:
                 print(f"Current: {s.agents.get(s.current_agent).get('model')}")
                 for m in s.cfg.get("available_models", []):
                     print(f"  - {m}")
+
         elif cmd == "context":
             if args:
                 s.cfg.set("context_size", int(args[0]))
-                print(f"Context size: {args[0]}")
+                UI.success(f"Context size: {args[0]}")
+
         elif cmd == "temp" or cmd == "temperature":
             if args:
                 agent = s.agents.get(s.current_agent)
                 agent["temperature"] = float(args[0])
                 s.cfg.set("agents", s.agents.agents)
-                print(f"Temperature: {args[0]}")
+                UI.success(f"Temperature: {args[0]}")
+
         elif cmd == "clear":
             s.hist = []
             s.current_session = s.db.create_session(s.current_agent)
-            print("History cleared, new session created")
+            UI.success("History cleared, new session created")
+
         elif cmd == "sessions":
-            for sess in s.db.list_sessions():
-                print(f"  - {sess['id']} (agent: {sess['agent']}, created: {datetime.datetime.fromtimestamp(sess['created_at']).strftime('%Y-%m-%d %H:%M')})")
+            sessions = s.db.list_sessions()
+            lines = [f"{sess['id']} (agent: {sess['agent']}, created: {datetime.datetime.fromtimestamp(sess['created_at']).strftime('%Y-%m-%d %H:%M')})" for sess in sessions]
+            UI.box("SESSIONS", lines, title_color=Theme.YELLOW)
+
         elif cmd == "session":
             if args:
                 s.current_session = args[0]
                 s.hist = s.db.get_messages(args[0])
-                print(f"Switched to session: {args[0]}")
+                UI.success(f"Switched to session: {args[0]}")
             else:
                 print("Provide session ID")
+
         else:
-            print(f"Unknown: {cmd}")
+            UI.error(f"Unknown command: {cmd}")
+
 
 if __name__ == "__main__":
     NocodAI().run()
