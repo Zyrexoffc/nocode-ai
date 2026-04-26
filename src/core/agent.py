@@ -86,15 +86,18 @@ class NocodAI:
             return f"U:{n}"
         except Exception as e: return f"Er:{e}"
     
-    def run(s):
+def run(s):
+        import datetime
+        s.ws = os.getcwd()
+        s.tm = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"""{Colors.INFO}
 ▝▜▄     {Colors.SUCCESS}NOCODE-AI V2.0.0{Colors.INFO}
    ▝▜▄
   ▗▟▀    {Colors.USER}Created By Zyrex Official{Colors.SUCCESS} ✔
  ▝▀
 {Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
-{Colors.TOOL}Description:{Colors.RESET} 
-{Colors.TOOL}Time:{Colors.RESET} 
+{Colors.TOOL}Description:{Colors.RESET} AI Assistant with tool execution (shell, file ops, git, search)
+{Colors.TOOL}Time:{Colors.RESET} %s
 {Colors.TOOL}Model-AI:{Colors.RESET} %s
 {Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────
 {Colors.INFO}Shift+Tab to accept edits
@@ -104,19 +107,35 @@ class NocodAI:
 {Colors.INFO}Workspace ({Colors.USER}%s{Colors.INFO})                                                                                                                                      
 {Colors.INFO}Script (nocode-ai){Colors.INFO}                                                                  
  {Colors.USER}~{Colors.RESET}                                                           
-""" % (s.model, s.ws))
+""" % (s.tm, s.model, s.ws))
         if not s.ck():
             print(f"{Colors.ERROR}[*] Starting Ollama...{Colors.RESET}")
             subprocess.Popen(["ollama","serve"],stdout=open(os.devnull,"w"),stderr=open(os.devnull,"w"))
             time.sleep(3)
         if not s.cm():
             print(f"{Colors.TOOL}[*] Downloading model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
-        sp="""You are NocodAI, a professional AI assistant.
-LEGALITY: Only legal activities. Refuse hacking, malware, illegal.
-FILE ACCESS: Root access. Read/edit files when user asks.
-CODING: Clean code, best practices.
-LANGUAGE: Respond in SAME LANGUAGE user uses."""
-        print(f"{Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────{Colors.RESET}\n")
+sp="""You are NocodAI, a professional AI assistant with ROOT ACCESS to the VPS.
+
+RULES:
+1. LEGALITY: Only assist with LEGAL activities. REFUSE: hacking, malware, Piracy, fraud, harassment, illegal content.
+2. FILE ACCESS: You have full root access. Read/edit/delete files only when USER explicitly asks.
+3. TOOLS - Use only when needed:
+   - shell: Execute bash commands (command: "your command")
+   - file_read: Read file content (path: "/file/path")
+   - file_write: Create/write file (path: "/file/path", content: "file content")
+   - file_edit: Edit file (path: "/file/path", oldString: "text to replace", newString: "new text")
+   - file_delete: Delete file/dir (path: "/path")
+   - file_list: List directory (path: "/directory")
+   - mkdir: Create directory (path: "/new/dir")
+   - search: Search in files (pattern: "text", path: "/directory")
+   - git: Git operations (command: "git command")
+   - system: Get system info (none needed)
+4. CODING: Write clean, efficient code with proper syntax and best practices.
+5. PROBLEM SOLVING: Think step by step. Explain before doing.
+6. OUTPUT: Be concise but complete. Show code in code blocks.
+7. LANGUAGE: Respond in SAME LANGUAGE user uses (Indonesian/English/etc)."""
+
+print(f"{Colors.BOLD}───────────────────────────────────────────────────────────────────────────────────────────────────────{Colors.RESET}\n")
         while 1:
             try:
                 p=input(f"{Colors.INFO}> {Colors.RESET}")
