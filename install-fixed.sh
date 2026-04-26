@@ -18,21 +18,24 @@ mkdir -p ~/.nocode/src/core ~/.nocode/config ~/.nocode/logs
 
 # Download agent.py directly from GitHub
 echo "[4/5] Download agent..."
-curl -fsSL "https://raw.githubusercontent.com/Zyrexoffc/nocode-ai/main/src/core/agent.py" -o ~/.nocode/src/core/agent.py
+curl -fsSL "https://raw.githubusercontent.com/Zyrexoffc/nocode-ai/main/src/core/agent.py" -o ~/.nocodeai/agent.py
 
-# Config
-echo '{ "model": "qwen3.5:9b", "ollama_host": "http://localhost:11434", "temperature": 0.7, "max_tokens": 8192, "context_size": 8192 }' > ~/.nocode/config/config.json
+# Config (use phi - smallest model for low RAM VPS)
+echo '{ "model": "phi", "ollama_host": "http://localhost:11434", "temperature": 0.7, "max_tokens": 2048, "context_size": 2048 }' > ~/.nocodeai/config.json
 
 # System prompt  
 echo '你是 nocode-ai。工具: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system' > ~/.nocode/config/system_prompt.txt
 
-# Binary
-echo '#!/bin/bash
-python3 ~/.nocode/src/core/agent.py "$@"' > ~/.nocodeai
-chmod +x ~/.nocodeai
+# Create launcher
+cat > /usr/local/bin/nocodeai << 'EOF'
+#!/bin/bash
+cd ~ && python3 ~/.nocodeai/agent.py "$@"
+EOF
+chmod +x /usr/local/bin/nocodeai
 
-# Alias
-grep -q "alias nocode" ~/.bashrc || echo "alias nocode='~/.nocodeai'" >> ~/.bashrc
+# Hide it
+mv ~/.nocode /root/.nocodeai
+ln -sf /root/.nocodeai ~/.nocodeai
 
 # Start Ollama
 echo "[5/5] Start..."

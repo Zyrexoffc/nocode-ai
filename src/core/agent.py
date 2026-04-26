@@ -16,12 +16,12 @@ class NocodAI:
     def __init__(s):
         s.h = []
         try:
-            c = json.loads(open(os.path.expanduser("~/.nocode/config/config.json")).read())
+            c = json.loads(open(os.path.expanduser("~/.nocodeai/config.json")).read())
         except:
             c = {}
         s.host = c.get("ollama_host", "http://localhost:11434")
-        s.model = c.get("model", "qwen3.5:9b")
-        s.ctx = c.get("context_size", 8192)
+        s.model = c.get("model", "phi")
+        s.ctx = c.get("context_size", 2048)
     
     def ck(s):
         try:
@@ -97,7 +97,7 @@ class NocodAI:
             time.sleep(3)
         if not s.cm():
             print(f"{Colors.TOOL}DL model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
-        sp=open(os.path.expanduser("~/.nocode/config/system_prompt.txt")).read() if os.path.exists(os.path.expanduser("~/.nocode/config/system_prompt.txt")) else ""
+        sp=""
         print(f"{Colors.SUCCESS}READY! Just type and chat:{Colors.RESET}\n")
         while 1:
             try:
