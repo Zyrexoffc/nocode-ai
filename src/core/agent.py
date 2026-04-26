@@ -15,6 +15,7 @@ class Colors:
 class NocodAI:
     def __init__(s):
         s.h = []
+        s.ws = os.getcwd()
         try:
             c = json.loads(open(os.path.expanduser("~/.nocodeai/config.json")).read())
         except:
@@ -85,44 +86,36 @@ class NocodAI:
             return f"U:{n}"
         except Exception as e: return f"Er:{e}"
     
-    def run(s):
-        print(f"{Colors.BOLD} ___ _   _ ___ ____  ___ ")
-        print(f"/ __| | | |_ _|  _ \\| _ \\ ")
-        print(f"\\__ \\ |_| || || |_) | |_) |")
-        print(f"|___/\\___/|___|____/|____/ ")
-        print(f"{Colors.INFO}NocodAI v1.6 - Professional{Colors.RESET}")
+def run(s):
+        print(f"""
+{Colors.BOLD}{Colors.INFO}  ██████╗ ███████╗███████╗██╗     ██╗███╗   ███╗
+{Colors.INFO}  ██╔══██╗██╔════╝██╔════╝██║     ██║████╗  ████║
+{Colors.INFO}  ██║  ██║█████╗  █████╗  ██║     ██║██╔██╗ ██╔██║
+{Colors.INFO}  ██║  ██║██╔══╝  ██╔══╝  ██║     ██║██║╚███║╚██║
+{Colors.INFO}  ██████╔╝███████╗███████╗███████╗██║██║ ╚████║██║
+{Colors.INFO}  ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚═╝
+{Colors.INFO}  ╔══════════════════════════════════════════╗
+{Colors.INFO}  ║{Colors.SUCCESS}     NOCODE-AI v1.7 - PRO{Colors.INFO}              ║
+{Colors.INFO}  ║{Colors.USER}     Created by Zyrex Official{Colors.INFO}          ║
+{Colors.INFO}  ╚══════════════════════════════════════════╝
+{Colors.RESET}""")
         if not s.ck():
-            print(f"{Colors.ERROR}Starting Ollama...{Colors.RESET}")
+            print(f"{Colors.ERROR}[*] Starting Ollama...{Colors.RESET}")
             subprocess.Popen(["ollama","serve"],stdout=open(os.devnull,"w"),stderr=open(os.devnull,"w"))
             time.sleep(3)
         if not s.cm():
-            print(f"{Colors.TOOL}DL model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
-sp="""You are NocodAI, a professional AI assistant with these rules:
-
-LEGALITY: Only assist with LEGAL activities. Refuse: hacking, malware, illegal content, piracy, fraud, harassment, any illegal activity.
-
-FILE ACCESS: You have root access to the VPS. When user asks to read/edit/delete files, you CAN do it. Use these tools only when explicitly requested by user.
-
-TOOLS AVAILABLE:
-- shell: Run bash commands
-- file_read: Read files (path required)
-- file_write: Write/create files (path, content required)
-- file_edit: Edit file (path, oldString, newString required)
-- file_delete: Delete files/directories
-- file_list: List directory contents
-- mkdir: Create directory
-- search: Search for pattern in files
-- git: Git operations
-- system: Get system info
-
-CODING: Write clean, efficient code. Use proper syntax and best practices.
-
-LANGUAGE: Respond in the SAME LANGUAGE the user uses."""
-        print(f"{Colors.SUCCESS}READY! Just type and chat:{Colors.RESET}\n")
+            print(f"{Colors.TOOL}[*] Downloading model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
+        s.ws = os.getcwd()
+        print(f"""
+{Colors.BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{Colors.SUCCESS}[✓] Ready! Type your message below:
+{Colors.BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{Colors.RESET}
+""")
         while 1:
             try:
-                p=input(f"{Colors.USER}>>> {Colors.RESET}")
-                if p.lower() in ["exit","quit","q"]: print(f"{Colors.INFO}BYE!{Colors.RESET}"); break
+                p=input(f"{Colors.INFO}@{Colors.USER}%s{Colors.INFO} > {Colors.RESET}" % s.ws)
+                if p.lower() in ["exit","quit","q"]: print(f"{Colors.INFO}[*] Goodbye!{Colors.RESET}"); break
                 s.h.append({"role":"user","content":p})
                 full=""
                 print(f"{Colors.ASSISTANT}",end="")
