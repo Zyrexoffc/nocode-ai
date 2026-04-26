@@ -7,7 +7,7 @@ import { tmpdir } from "../fixture/fixture"
 import { Instance } from "../../src/project/instance"
 import { Provider } from "../../src/provider"
 import { Env } from "../../src/env"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Filesystem } from "../../src/util"
 import { Effect } from "effect"
 import { AppRuntime } from "../../src/effect/app-runtime"
@@ -29,9 +29,9 @@ test("Bedrock: config region takes precedence over AWS_REGION env var", async ()
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {
@@ -61,9 +61,9 @@ test("Bedrock: falls back to AWS_REGION env var when no config region", async ()
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
         }),
       )
     },
@@ -86,9 +86,9 @@ test("Bedrock: loads when bearer token from auth.json is present", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {
@@ -154,9 +154,9 @@ test("Bedrock: config profile takes precedence over AWS_PROFILE env var", async 
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {
@@ -187,9 +187,9 @@ test("Bedrock: includes custom endpoint in options when specified", async () => 
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {
@@ -220,9 +220,9 @@ test("Bedrock: autoloads when AWS_WEB_IDENTITY_TOKEN_FILE is present", async () 
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {
@@ -258,9 +258,9 @@ test("Bedrock: model with us. prefix should not be double-prefixed", async () =>
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {
@@ -295,9 +295,9 @@ test("Bedrock: model with global. prefix should not be prefixed", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {
@@ -331,9 +331,9 @@ test("Bedrock: model with eu. prefix should not be double-prefixed", async () =>
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {
@@ -367,9 +367,9 @@ test("Bedrock: model without prefix in US region should get us. prefix added", a
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Filesystem.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "nocode-ai.json"),
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           provider: {
             "amazon-bedrock": {
               options: {

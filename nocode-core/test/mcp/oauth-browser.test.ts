@@ -113,9 +113,9 @@ test("BrowserOpenFailed event is published when open() throws", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        `${dir}/opencode.json`,
+        `${dir}/nocode-ai.json`,
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           mcp: {
             "test-oauth-server": {
               type: "remote",
@@ -169,9 +169,9 @@ test("BrowserOpenFailed event is NOT published when open() succeeds", async () =
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        `${dir}/opencode.json`,
+        `${dir}/nocode-ai.json`,
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           mcp: {
             "test-oauth-server-2": {
               type: "remote",
@@ -223,9 +223,9 @@ test("open() is called with the authorization URL", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        `${dir}/opencode.json`,
+        `${dir}/nocode-ai.json`,
         JSON.stringify({
-          $schema: "https://opencode.ai/config.json",
+          $schema: "https://nocode-ai.ai/config.json",
           mcp: {
             "test-oauth-server-3": {
               type: "remote",

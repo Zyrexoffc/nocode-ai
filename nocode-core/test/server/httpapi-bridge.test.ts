@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import type { UpgradeWebSocket } from "hono/ws"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { Instance } from "../../src/project/instance"
 import { InstanceRoutes } from "../../src/server/routes/instance"
 import { FilePaths } from "../../src/server/routes/instance/httpapi/file"
@@ -11,17 +11,17 @@ import { tmpdir } from "../fixture/fixture"
 void Log.init({ print: false })
 
 const original = {
-  OPENCODE_EXPERIMENTAL_HTTPAPI: Flag.OPENCODE_EXPERIMENTAL_HTTPAPI,
-  OPENCODE_SERVER_PASSWORD: Flag.OPENCODE_SERVER_PASSWORD,
-  OPENCODE_SERVER_USERNAME: Flag.OPENCODE_SERVER_USERNAME,
+  NOCODE_AI_EXPERIMENTAL_HTTPAPI: Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI,
+  NOCODE_AI_SERVER_PASSWORD: Flag.NOCODE_AI_SERVER_PASSWORD,
+  NOCODE_AI_SERVER_USERNAME: Flag.NOCODE_AI_SERVER_USERNAME,
 }
 
 const websocket = (() => () => new Response(null, { status: 501 })) as unknown as UpgradeWebSocket
 
 function app(input?: { password?: string; username?: string }) {
-  Flag.OPENCODE_EXPERIMENTAL_HTTPAPI = true
-  Flag.OPENCODE_SERVER_PASSWORD = input?.password
-  Flag.OPENCODE_SERVER_USERNAME = input?.username
+  Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI = true
+  Flag.NOCODE_AI_SERVER_PASSWORD = input?.password
+  Flag.NOCODE_AI_SERVER_USERNAME = input?.username
   return InstanceRoutes(websocket)
 }
 
@@ -38,9 +38,9 @@ function fileUrl(input?: { directory?: string; token?: string }) {
 }
 
 afterEach(async () => {
-  Flag.OPENCODE_EXPERIMENTAL_HTTPAPI = original.OPENCODE_EXPERIMENTAL_HTTPAPI
-  Flag.OPENCODE_SERVER_PASSWORD = original.OPENCODE_SERVER_PASSWORD
-  Flag.OPENCODE_SERVER_USERNAME = original.OPENCODE_SERVER_USERNAME
+  Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI = original.NOCODE_AI_EXPERIMENTAL_HTTPAPI
+  Flag.NOCODE_AI_SERVER_PASSWORD = original.NOCODE_AI_SERVER_PASSWORD
+  Flag.NOCODE_AI_SERVER_USERNAME = original.NOCODE_AI_SERVER_USERNAME
   await Instance.disposeAll()
   await resetDatabase()
 })
@@ -52,7 +52,7 @@ describe("HttpApi Hono bridge", () => {
 
     const response = await app().request(fileUrl(), {
       headers: {
-        "x-opencode-directory": tmp.path,
+        "x-nocode-ai-directory": tmp.path,
       },
     })
 
@@ -65,7 +65,7 @@ describe("HttpApi Hono bridge", () => {
 
     const response = await app().request("/project/current", {
       headers: {
-        "x-opencode-directory": tmp.path,
+        "x-nocode-ai-directory": tmp.path,
       },
     })
 
@@ -79,18 +79,18 @@ describe("HttpApi Hono bridge", () => {
 
     const [missing, bad, good] = await Promise.all([
       app({ password: "secret" }).request(fileUrl(), {
-        headers: { "x-opencode-directory": tmp.path },
+        headers: { "x-nocode-ai-directory": tmp.path },
       }),
       app({ password: "secret" }).request(fileUrl(), {
         headers: {
-          authorization: authorization("opencode", "wrong"),
-          "x-opencode-directory": tmp.path,
+          authorization: authorization("nocode-ai", "wrong"),
+          "x-nocode-ai-directory": tmp.path,
         },
       }),
       app({ password: "secret" }).request(fileUrl(), {
         headers: {
-          authorization: authorization("opencode", "secret"),
-          "x-opencode-directory": tmp.path,
+          authorization: authorization("nocode-ai", "secret"),
+          "x-nocode-ai-directory": tmp.path,
         },
       }),
     ])
@@ -105,10 +105,10 @@ describe("HttpApi Hono bridge", () => {
     await Bun.write(`${tmp.path}/hello.txt`, "hello")
 
     const response = await app({ password: "secret" }).request(
-      fileUrl({ token: Buffer.from("opencode:secret").toString("base64") }),
+      fileUrl({ token: Buffer.from("nocode-ai:secret").toString("base64") }),
       {
         headers: {
-          "x-opencode-directory": tmp.path,
+          "x-nocode-ai-directory": tmp.path,
         },
       },
     )
@@ -124,7 +124,7 @@ describe("HttpApi Hono bridge", () => {
 
     const response = await app().request(fileUrl({ directory: query.path }), {
       headers: {
-        "x-opencode-directory": header.path,
+        "x-nocode-ai-directory": header.path,
       },
     })
 

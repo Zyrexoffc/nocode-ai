@@ -7,12 +7,12 @@ import { pathToFileURL, fileURLToPath } from "url"
 import * as LSPServer from "./server"
 import z from "zod"
 import { Config } from "../config"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { Process } from "../util"
 import { spawn as lspspawn } from "./launch"
 import { Effect, Layer, Context, Schema } from "effect"
 import { InstanceState } from "@/effect"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { withStatics } from "@/util/schema"
 import { zod, ZodOverride } from "@/util/effect-zod"
 
@@ -111,9 +111,9 @@ const kinds = [
 ]
 
 const filterExperimentalServers = (servers: Record<string, LSPServer.Info>) => {
-  if (Flag.OPENCODE_EXPERIMENTAL_LSP_TY) {
+  if (Flag.NOCODE_AI_EXPERIMENTAL_LSP_TY) {
     if (servers["pyright"]) {
-      log.info("LSP server pyright is disabled because OPENCODE_EXPERIMENTAL_LSP_TY is enabled")
+      log.info("LSP server pyright is disabled because NOCODE_AI_EXPERIMENTAL_LSP_TY is enabled")
       delete servers["pyright"]
     }
   } else {
@@ -149,7 +149,7 @@ export interface Interface {
   readonly outgoingCalls: (input: LocInput) => Effect.Effect<any[]>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/LSP") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/LSP") {}
 
 export const layer = Layer.effect(
   Service,

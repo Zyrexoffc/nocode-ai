@@ -1,6 +1,6 @@
 import { Effect, Layer, Context, Schema } from "effect"
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
-import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
+import { CrossSpawnSpawner } from "@nocode-ai-ai/core/cross-spawn-spawner"
 import { InstanceState } from "@/effect"
 import path from "path"
 import { mergeDeep } from "remeda"
@@ -27,7 +27,7 @@ export interface Interface {
   readonly file: (filepath: string) => Effect.Effect<boolean>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Format") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Format") {}
 
 export const layer = Layer.effect(
   Service,

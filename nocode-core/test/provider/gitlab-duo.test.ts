@@ -11,16 +11,16 @@ export {}
 // import { Instance } from "../../src/project/instance"
 // import { Provider } from "../../src/provider"
 // import { Env } from "../../src/env"
-// import { Global } from "@opencode-ai/core/global"
+// import { Global } from "@nocode-ai-ai/core/global"
 // import { GitLabWorkflowLanguageModel } from "gitlab-ai-provider"
 
 // test("GitLab Duo: loads provider with API key from environment", async () => {
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //         }),
 //       )
 //     },
@@ -42,9 +42,9 @@ export {}
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //           provider: {
 //             gitlab: {
 //               options: {
@@ -74,9 +74,9 @@ export {}
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //         }),
 //       )
 //     },
@@ -111,9 +111,9 @@ export {}
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //         }),
 //       )
 //     },
@@ -147,9 +147,9 @@ export {}
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //           provider: {
 //             gitlab: {
 //               options: {
@@ -179,9 +179,9 @@ export {}
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //           provider: {
 //             gitlab: {
 //               options: {
@@ -209,9 +209,9 @@ export {}
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //         }),
 //       )
 //     },
@@ -235,9 +235,9 @@ export {}
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //           provider: {
 //             gitlab: {
 //               options: {
@@ -270,9 +270,9 @@ export {}
 //   await using tmp = await tmpdir({
 //     init: async (dir) => {
 //       await Bun.write(
-//         path.join(dir, "opencode.json"),
+//         path.join(dir, "nocode-ai.json"),
 //         JSON.stringify({
-//           $schema: "https://opencode.ai/config.json",
+//           $schema: "https://nocode-ai.ai/config.json",
 //         }),
 //       )
 //     },
@@ -298,7 +298,7 @@ export {}
 //   test("duo-workflow-* model routes through workflowChat", async () => {
 //     await using tmp = await tmpdir({
 //       init: async (dir) => {
-//         await Bun.write(path.join(dir, "opencode.json"), JSON.stringify({ $schema: "https://opencode.ai/config.json" }))
+//         await Bun.write(path.join(dir, "nocode-ai.json"), JSON.stringify({ $schema: "https://nocode-ai.ai/config.json" }))
 //       },
 //     })
 //     await Instance.provide({
@@ -346,7 +346,7 @@ export {}
 //   test("duo-chat-* model routes through agenticChat (not workflow)", async () => {
 //     await using tmp = await tmpdir({
 //       init: async (dir) => {
-//         await Bun.write(path.join(dir, "opencode.json"), JSON.stringify({ $schema: "https://opencode.ai/config.json" }))
+//         await Bun.write(path.join(dir, "nocode-ai.json"), JSON.stringify({ $schema: "https://nocode-ai.ai/config.json" }))
 //       },
 //     })
 //     await Instance.provide({
@@ -369,7 +369,7 @@ export {}
 //   test("model.options merged with provider.options in getLanguage", async () => {
 //     await using tmp = await tmpdir({
 //       init: async (dir) => {
-//         await Bun.write(path.join(dir, "opencode.json"), JSON.stringify({ $schema: "https://opencode.ai/config.json" }))
+//         await Bun.write(path.join(dir, "nocode-ai.json"), JSON.stringify({ $schema: "https://nocode-ai.ai/config.json" }))
 //       },
 //     })
 //     await Instance.provide({
@@ -393,7 +393,7 @@ export {}
 //   test("static duo-chat models always present regardless of discovery", async () => {
 //     await using tmp = await tmpdir({
 //       init: async (dir) => {
-//         await Bun.write(path.join(dir, "opencode.json"), JSON.stringify({ $schema: "https://opencode.ai/config.json" }))
+//         await Bun.write(path.join(dir, "nocode-ai.json"), JSON.stringify({ $schema: "https://nocode-ai.ai/config.json" }))
 //       },
 //     })
 //     await Instance.provide({

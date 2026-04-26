@@ -24,23 +24,23 @@ import MAX_STEPS from "../session/prompt/max-steps.txt"
 import { ToolRegistry } from "../tool"
 import { MCP } from "../mcp"
 import { LSP } from "../lsp"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { ulid } from "ulid"
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
-import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
+import { CrossSpawnSpawner } from "@nocode-ai-ai/core/cross-spawn-spawner"
 import * as Stream from "effect/Stream"
 import { Command } from "../command"
 import { pathToFileURL, fileURLToPath } from "url"
 import { ConfigMarkdown } from "../config"
 import { SessionSummary } from "./summary"
-import { NamedError } from "@opencode-ai/core/util/error"
+import { NamedError } from "@nocode-ai-ai/core/util/error"
 import { SessionProcessor } from "./processor"
 import { Tool } from "@/tool"
 import { Permission } from "@/permission"
 import { SessionStatus } from "./status"
 import { LLM } from "./llm"
 import { Shell } from "@/shell/shell"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { Truncate } from "@/tool"
 import { decodeDataUrl } from "@/util/data-url"
 import { Process } from "@/util"
@@ -78,7 +78,7 @@ export interface Interface {
   readonly resolvePromptParts: (template: string) => Effect.Effect<PromptInput["parts"]>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/SessionPrompt") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/SessionPrompt") {}
 
 export const layer = Layer.effect(
   Service,
@@ -227,7 +227,7 @@ export const layer = Layer.effect(
       const userMessage = input.messages.findLast((msg) => msg.info.role === "user")
       if (!userMessage) return input.messages
 
-      if (!Flag.OPENCODE_EXPERIMENTAL_PLAN_MODE) {
+      if (!Flag.NOCODE_AI_EXPERIMENTAL_PLAN_MODE) {
         if (input.agent.name === "plan") {
           userMessage.parts.push({
             id: PartID.ascending(),
@@ -801,7 +801,7 @@ NOTE: At any point in time through this workflow you should feel free to ask the
               cd -- "$1"
               eval ${JSON.stringify(input.command)}
             `,
-            "opencode",
+            "nocode-ai",
             cwd,
           ],
         },
@@ -815,7 +815,7 @@ NOTE: At any point in time through this workflow you should feel free to ask the
               cd -- "$1"
               eval ${JSON.stringify(input.command)}
             `,
-            "opencode",
+            "nocode-ai",
             cwd,
           ],
         },

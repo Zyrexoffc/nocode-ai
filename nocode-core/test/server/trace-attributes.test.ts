@@ -24,9 +24,9 @@ describe("paramToAttributeKey", () => {
     expect(paramToAttributeKey("workspaceID")).toBe("workspace.id")
   })
 
-  test("namespaces non-ID params under opencode.", () => {
-    expect(paramToAttributeKey("name")).toBe("opencode.name")
-    expect(paramToAttributeKey("slug")).toBe("opencode.slug")
+  test("namespaces non-ID params under nocode-ai.", () => {
+    expect(paramToAttributeKey("name")).toBe("nocode-ai.name")
+    expect(paramToAttributeKey("slug")).toBe("nocode-ai.slug")
   })
 })
 
@@ -54,9 +54,9 @@ describe("requestAttributes", () => {
     expect(attrs["message.id"]).toBe("msg_def")
     expect(attrs["part.id"]).toBe("prt_ghi")
     // No camelCase leftovers:
-    expect(attrs["opencode.sessionID"]).toBeUndefined()
-    expect(attrs["opencode.messageID"]).toBeUndefined()
-    expect(attrs["opencode.partID"]).toBeUndefined()
+    expect(attrs["nocode-ai.sessionID"]).toBeUndefined()
+    expect(attrs["nocode-ai.messageID"]).toBeUndefined()
+    expect(attrs["nocode-ai.partID"]).toBeUndefined()
   })
 
   test("produces no param attributes when no params are matched", () => {
@@ -64,13 +64,13 @@ describe("requestAttributes", () => {
     expect(Object.keys(attrs).filter((k) => k !== "http.method" && k !== "http.path")).toEqual([])
   })
 
-  test("namespaces non-ID params under opencode. (e.g. mcp :name)", () => {
+  test("namespaces non-ID params under nocode-ai. (e.g. mcp :name)", () => {
     const attrs = requestAttributes(
       fakeContext("POST", "http://localhost/mcp/exa/connect", {
         name: "exa",
       }),
     )
-    expect(attrs["opencode.name"]).toBe("exa")
+    expect(attrs["nocode-ai.name"]).toBe("exa")
     expect(attrs["name"]).toBeUndefined()
   })
 })

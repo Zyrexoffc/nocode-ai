@@ -157,7 +157,7 @@ Direct legacy usage means any source file that still calls one of:
 - `Instance.reload(...)`
 - `Instance.dispose()` / `Instance.disposeAll()`
 
-Current total: `56` files in `packages/opencode/src`.
+Current total: `56` files in `packages/nocode-ai/src`.
 
 ### Core bridge and plumbing
 
@@ -305,5 +305,5 @@ Active tracker items:
 
 Dedicated worktree for this transition:
 
-- path: `/Users/kit/code/open-source/opencode-worktrees/instance-effect-shift`
+- path: `/Users/kit/code/open-source/nocode-ai-worktrees/instance-effect-shift`
 - branch: `kit/instance-effect-shift`

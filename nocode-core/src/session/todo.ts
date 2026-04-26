@@ -34,7 +34,7 @@ export interface Interface {
   readonly get: (sessionID: SessionID) => Effect.Effect<Info[]>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/SessionTodo") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/SessionTodo") {}
 
 export const layer = Layer.effect(
   Service,

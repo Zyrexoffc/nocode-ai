@@ -160,7 +160,7 @@ export const { use: useEditorContext, provider: EditorContextProvider } = create
           request("initialize", {
             protocolVersion: MCP_PROTOCOL_VERSION,
             capabilities: {},
-            clientInfo: { name: "opencode", version: "0.0.0" },
+            clientInfo: { name: "nocode-ai", version: "0.0.0" },
           })
         })
 
@@ -259,7 +259,7 @@ function resolveEditorConnection(): EditorConnection | undefined {
     }
   }
 
-  const port = parsePort(process.env.CLAUDE_CODE_SSE_PORT || process.env.OPENCODE_EDITOR_SSE_PORT)
+  const port = parsePort(process.env.CLAUDE_CODE_SSE_PORT || process.env.NOCODE_AI_EDITOR_SSE_PORT)
   if (!port) return
   return {
     url: `ws://127.0.0.1:${port}`,

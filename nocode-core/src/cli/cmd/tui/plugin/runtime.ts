@@ -9,7 +9,7 @@ import {
   type TuiPluginStatus,
   type TuiSlotPlugin,
   type TuiTheme,
-} from "@opencode-ai/plugin/tui"
+} from "@nocode-ai-ai/plugin/tui"
 import path from "path"
 import { fileURLToPath } from "url"
 import { TuiConfig } from "@/cli/cmd/tui/config/tui"
@@ -29,11 +29,11 @@ import { PluginLoader } from "@/plugin/loader"
 import { PluginMeta } from "@/plugin/meta"
 import { installPlugin as installModulePlugin, patchPluginConfig, readPluginManifest } from "@/plugin/install"
 import { hasTheme, upsertTheme } from "../context/theme"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Filesystem } from "@/util"
 import { Process } from "@/util"
-import { Flock } from "@opencode-ai/core/util/flock"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flock } from "@nocode-ai-ai/core/util/flock"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { INTERNAL_TUI_PLUGINS, type InternalTuiPlugin } from "./internal"
 import { setupSlots, Slot as View } from "./slots"
 import type { HostPluginApi, HostSlots } from "./slots"
@@ -157,9 +157,9 @@ function createThemeInstaller(
     const name = path.basename(src, path.extname(src))
     const source_dir = path.dirname(meta.source)
     const local_dir =
-      path.basename(source_dir) === ".opencode"
+      path.basename(source_dir) === ".nocode-ai"
         ? path.join(source_dir, "themes")
-        : path.join(source_dir, ".opencode", "themes")
+        : path.join(source_dir, ".nocode-ai", "themes")
     const dest_dir = meta.scope === "local" ? local_dir : path.join(Global.Path.config, "themes")
     const dest = path.join(dest_dir, `${name}.json`)
     const stat = await Filesystem.statAsync(src)
@@ -748,7 +748,7 @@ function defaultPluginOrigin(state: RuntimeState, spec: string): ConfigPlugin.Or
   return {
     spec,
     scope: "local",
-    source: state.api.state.path.config || path.join(state.directory, ".opencode", "tui.json"),
+    source: state.api.state.path.config || path.join(state.directory, ".nocode-ai", "tui.json"),
   }
 }
 
@@ -989,8 +989,8 @@ async function load(input: { api: Api; config: TuiConfig.Info }) {
     await Instance.provide({
       directory: cwd,
       fn: async () => {
-        const records = Flag.OPENCODE_PURE ? [] : (config.plugin_origins ?? [])
-        if (Flag.OPENCODE_PURE && config.plugin_origins?.length) {
+        const records = Flag.NOCODE_AI_PURE ? [] : (config.plugin_origins ?? [])
+        if (Flag.NOCODE_AI_PURE && config.plugin_origins?.length) {
           log.info("skipping external tui plugins in pure mode", { count: config.plugin_origins.length })
         }
 

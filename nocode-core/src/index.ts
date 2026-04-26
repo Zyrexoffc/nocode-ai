@@ -11,8 +11,8 @@ import { UninstallCommand } from "./cli/cmd/uninstall"
 import { ModelsCommand } from "./cli/cmd/models"
 import { UI } from "./cli/ui"
 import { Installation } from "./installation"
-import { InstallationVersion } from "@opencode-ai/core/installation/version"
-import { NamedError } from "@opencode-ai/core/util/error"
+import { InstallationVersion } from "@nocode-ai-ai/core/installation/version"
+import { NamedError } from "@nocode-ai-ai/core/util/error"
 import { FormatError } from "./cli/error"
 import { ServeCommand } from "./cli/cmd/serve"
 import { Filesystem } from "./util"
@@ -31,14 +31,14 @@ import { PrCommand } from "./cli/cmd/pr"
 import { SessionCommand } from "./cli/cmd/session"
 import { DbCommand } from "./cli/cmd/db"
 import path from "path"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { JsonMigration } from "./storage"
 import { Database } from "./storage"
 import { errorMessage } from "./util/error"
 import { PluginCommand } from "./cli/cmd/plug"
 import { Heap } from "./cli/heap"
 import { drizzle } from "drizzle-orm/bun-sqlite"
-import { ensureProcessMetadata } from "@opencode-ai/core/util/opencode-process"
+import { ensureProcessMetadata } from "@nocode-ai-ai/core/util/nocode-ai-process"
 
 const processMetadata = ensureProcessMetadata("main")
 
@@ -58,7 +58,7 @@ const args = hideBin(process.argv)
 
 function show(out: string) {
   const text = out.trimStart()
-  if (!text.startsWith("opencode ")) {
+  if (!text.startsWith("nocode-ai ")) {
     process.stderr.write(UI.logo() + EOL + EOL)
     process.stderr.write(text)
     return
@@ -68,7 +68,7 @@ function show(out: string) {
 
 const cli = yargs(args)
   .parserConfiguration({ "populate--": true })
-  .scriptName("opencode")
+  .scriptName("nocode-ai")
   .wrap(100)
   .help("help", "show help")
   .alias("help", "h")
@@ -89,7 +89,7 @@ const cli = yargs(args)
   })
   .middleware(async (opts) => {
     if (opts.pure) {
-      process.env.OPENCODE_PURE = "1"
+      process.env.NOCODE_AI_PURE = "1"
     }
 
     await Log.init({
@@ -105,17 +105,17 @@ const cli = yargs(args)
     Heap.start()
 
     process.env.AGENT = "1"
-    process.env.OPENCODE = "1"
-    process.env.OPENCODE_PID = String(process.pid)
+    process.env.NOCODE_AI = "1"
+    process.env.NOCODE_AI_PID = String(process.pid)
 
-    Log.Default.info("opencode", {
+    Log.Default.info("nocode-ai", {
       version: InstallationVersion,
       args: process.argv.slice(2),
       process_role: processMetadata.processRole,
       run_id: processMetadata.runID,
     })
 
-    const marker = path.join(Global.Path.data, "opencode.db")
+    const marker = path.join(Global.Path.data, "nocode-ai.db")
     if (!(await Filesystem.exists(marker))) {
       const tty = process.stderr.isTTY
       process.stderr.write("Performing one time database migration, may take a few minutes..." + EOL)

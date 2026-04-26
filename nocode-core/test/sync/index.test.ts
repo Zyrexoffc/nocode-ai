@@ -7,19 +7,19 @@ import { SyncEvent } from "../../src/sync"
 import { Database } from "../../src/storage"
 import { EventTable } from "../../src/sync/event.sql"
 import { Identifier } from "../../src/id/id"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { initProjectors } from "../../src/server/projectors"
 
-const original = Flag.OPENCODE_EXPERIMENTAL_WORKSPACES
+const original = Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES
 
 beforeEach(() => {
   Database.close()
 
-  Flag.OPENCODE_EXPERIMENTAL_WORKSPACES = true
+  Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES = true
 })
 
 afterEach(() => {
-  Flag.OPENCODE_EXPERIMENTAL_WORKSPACES = original
+  Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES = original
 })
 
 function withInstance(fn: () => void | Promise<void>) {

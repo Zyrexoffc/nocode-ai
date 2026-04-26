@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import type { UpgradeWebSocket } from "hono/ws"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { GlobalBus } from "@/bus/global"
 import { Instance } from "../../src/project/instance"
 import { InstanceRoutes } from "../../src/server/routes/instance"
@@ -13,12 +13,12 @@ import { tmpdir } from "../fixture/fixture"
 
 void Log.init({ print: false })
 
-const original = Flag.OPENCODE_EXPERIMENTAL_HTTPAPI
+const original = Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI
 const websocket = (() => () => new Response(null, { status: 501 })) as unknown as UpgradeWebSocket
 const testWorktreeMutations = process.platform === "win32" ? test.skip : test
 
 function app() {
-  Flag.OPENCODE_EXPERIMENTAL_HTTPAPI = true
+  Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI = true
   return InstanceRoutes(websocket)
 }
 
@@ -41,7 +41,7 @@ async function waitReady(directory: string) {
 }
 
 afterEach(async () => {
-  Flag.OPENCODE_EXPERIMENTAL_HTTPAPI = original
+  Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI = original
   await Instance.disposeAll()
   await resetDatabase()
 })
@@ -62,11 +62,11 @@ describe("experimental HttpApi", () => {
       },
     })
 
-    const headers = { "x-opencode-directory": tmp.path }
+    const headers = { "x-nocode-ai-directory": tmp.path }
     const [consoleState, consoleOrgs, toolList, toolIDs, worktrees, resources] = await Promise.all([
       app().request(ExperimentalPaths.console, { headers }),
       app().request(ExperimentalPaths.consoleOrgs, { headers }),
-      app().request(`${ExperimentalPaths.tool}?provider=opencode&model=gpt-5`, { headers }),
+      app().request(`${ExperimentalPaths.tool}?provider=nocode-ai&model=gpt-5`, { headers }),
       app().request(ExperimentalPaths.toolIDs, { headers }),
       app().request(ExperimentalPaths.worktree, { headers }),
       app().request(ExperimentalPaths.resource, { headers }),
@@ -118,7 +118,7 @@ describe("experimental HttpApi", () => {
 
     const switched = await app().request(ExperimentalPaths.consoleSwitch, {
       method: "POST",
-      headers: { "x-opencode-directory": tmp.path, "content-type": "application/json" },
+      headers: { "x-nocode-ai-directory": tmp.path, "content-type": "application/json" },
       body: JSON.stringify({ accountID: "account-test", orgID: "org-test" }),
     })
 
@@ -129,7 +129,7 @@ describe("experimental HttpApi", () => {
   testWorktreeMutations("serves worktree mutations through Hono bridge", async () => {
     await using tmp = await tmpdir({ git: true, config: { formatter: false, lsp: false } })
 
-    const headers = { "x-opencode-directory": tmp.path, "content-type": "application/json" }
+    const headers = { "x-nocode-ai-directory": tmp.path, "content-type": "application/json" }
     const created = await app().request(ExperimentalPaths.worktree, {
       method: "POST",
       headers,
@@ -138,7 +138,7 @@ describe("experimental HttpApi", () => {
 
     expect(created.status).toBe(200)
     const info = (await created.json()) as Worktree.Info
-    expect(info).toMatchObject({ name: "api-test", branch: "opencode/api-test" })
+    expect(info).toMatchObject({ name: "api-test", branch: "nocode-ai/api-test" })
     await waitReady(info.directory)
 
     const listed = await app().request(ExperimentalPaths.worktree, { headers })

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import type { UpgradeWebSocket } from "hono/ws"
 import path from "path"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { GlobalBus } from "@/bus/global"
 import { Instance } from "../../src/project/instance"
 import { InstanceRoutes } from "../../src/server/routes/instance"
@@ -11,11 +11,11 @@ import { tmpdir } from "../fixture/fixture"
 
 void Log.init({ print: false })
 
-const original = Flag.OPENCODE_EXPERIMENTAL_HTTPAPI
+const original = Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI
 const websocket = (() => () => new Response(null, { status: 501 })) as unknown as UpgradeWebSocket
 
 function app() {
-  Flag.OPENCODE_EXPERIMENTAL_HTTPAPI = true
+  Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI = true
   return InstanceRoutes(websocket)
 }
 
@@ -38,7 +38,7 @@ async function waitDisposed(directory: string) {
 }
 
 afterEach(async () => {
-  Flag.OPENCODE_EXPERIMENTAL_HTTPAPI = original
+  Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI = original
   await Instance.disposeAll()
   await resetDatabase()
 })
@@ -52,7 +52,7 @@ describe("config HttpApi", () => {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        "x-opencode-directory": tmp.path,
+        "x-nocode-ai-directory": tmp.path,
       },
       body: JSON.stringify({ username: "patched-user", formatter: false, lsp: false }),
     })

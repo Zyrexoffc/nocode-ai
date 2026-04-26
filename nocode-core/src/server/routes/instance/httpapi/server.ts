@@ -20,7 +20,7 @@ import { ProviderApi, providerHandlers } from "./provider"
 import { QuestionApi, questionHandlers } from "./question"
 import { WorkspaceApi, workspaceHandlers } from "./workspace"
 import { disposeMiddleware } from "./lifecycle"
-import { memoMap } from "@opencode-ai/core/effect/memo-map"
+import { memoMap } from "@nocode-ai-ai/core/effect/memo-map"
 
 const Query = Schema.Struct({
   directory: Schema.optional(Schema.String),
@@ -30,7 +30,7 @@ const Query = Schema.Struct({
 
 const Headers = Schema.Struct({
   authorization: Schema.optional(Schema.String),
-  "x-opencode-directory": Schema.optional(Schema.String),
+  "x-nocode-ai-directory": Schema.optional(Schema.String),
 })
 
 function decode(input: string) {
@@ -47,7 +47,7 @@ const instance = HttpRouter.middleware()(
       Effect.gen(function* () {
         const query = yield* HttpServerRequest.schemaSearchParams(Query)
         const headers = yield* HttpServerRequest.schemaHeaders(Headers)
-        const raw = query.directory || headers["x-opencode-directory"] || process.cwd()
+        const raw = query.directory || headers["x-nocode-ai-directory"] || process.cwd()
         const workspace = query.workspace || undefined
         const ctx = yield* Effect.promise(() =>
           Instance.provide({

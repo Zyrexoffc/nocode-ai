@@ -1,12 +1,12 @@
-import { Slug } from "@opencode-ai/core/util/slug"
+import { Slug } from "@nocode-ai-ai/core/util/slug"
 import path from "path"
 import { BusEvent } from "@/bus/bus-event"
 import { Bus } from "@/bus"
 import { Decimal } from "decimal.js"
 import z from "zod"
 import { type ProviderMetadata, type LanguageModelUsage } from "ai"
-import { Flag } from "@opencode-ai/core/flag/flag"
-import { InstallationVersion } from "@opencode-ai/core/installation/version"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
+import { InstallationVersion } from "@nocode-ai-ai/core/installation/version"
 
 import { Database, NotFoundError, eq, and, gte, isNull, desc, like, inArray, lt } from "../storage"
 import { SyncEvent } from "../sync"
@@ -25,7 +25,7 @@ import { SessionID, MessageID, PartID } from "./schema"
 
 import type { Provider } from "@/provider"
 import { Permission } from "@/permission"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Effect, Layer, Option, Context, Schema, Types } from "effect"
 import { zod } from "@/util/effect-zod"
 import { withStatics } from "@/util/schema"
@@ -291,7 +291,7 @@ export const Event = {
 
 export function plan(input: { slug: string; time: { created: number } }) {
   const base = Instance.project.vcs
-    ? path.join(Instance.worktree, ".opencode", "plans")
+    ? path.join(Instance.worktree, ".nocode-ai", "plans")
     : path.join(Global.Path.data, "plans")
   return path.join(base, [input.time.created, input.slug].join("-") + ".md")
 }
@@ -414,7 +414,7 @@ export interface Interface {
   ) => Effect.Effect<Option.Option<MessageV2.WithParts>>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Session") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Session") {}
 
 export type Patch = Types.DeepMutable<SyncEvent.Event<typeof Event.Updated>["data"]["info"]>
 
@@ -455,7 +455,7 @@ export const layer: Layer.Layer<Service, never, Bus.Service | Storage.Service> =
 
       yield* Effect.sync(() => SyncEvent.run(Event.Created, { sessionID: result.id, info: result }))
 
-      if (!Flag.OPENCODE_EXPERIMENTAL_WORKSPACES) {
+      if (!Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES) {
         // This only exist for backwards compatibility. We should not be
         // manually publishing this event; it is a sync event now
         yield* bus.publish(Event.Updated, {
@@ -750,7 +750,7 @@ export function* list(input?: {
   if (input?.workspaceID) {
     conditions.push(eq(SessionTable.workspace_id, input.workspaceID))
   }
-  if (!Flag.OPENCODE_EXPERIMENTAL_WORKSPACES) {
+  if (!Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES) {
     if (input?.directory) {
       conditions.push(eq(SessionTable.directory, input.directory))
     }

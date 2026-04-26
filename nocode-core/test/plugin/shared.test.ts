@@ -17,71 +17,71 @@ describe("parsePluginSpecifier", () => {
   })
 
   test("parses scoped npm package without version", () => {
-    expect(parsePluginSpecifier("@opencode/acme")).toEqual({
-      pkg: "@opencode/acme",
+    expect(parsePluginSpecifier("@nocode-ai/acme")).toEqual({
+      pkg: "@nocode-ai/acme",
       version: "latest",
     })
   })
 
   test("parses scoped npm package with version", () => {
-    expect(parsePluginSpecifier("@opencode/acme@1.0.0")).toEqual({
-      pkg: "@opencode/acme",
+    expect(parsePluginSpecifier("@nocode-ai/acme@1.0.0")).toEqual({
+      pkg: "@nocode-ai/acme",
       version: "1.0.0",
     })
   })
 
   test("parses package with git+https url", () => {
-    expect(parsePluginSpecifier("acme@git+https://github.com/opencode/acme.git")).toEqual({
+    expect(parsePluginSpecifier("acme@git+https://github.com/nocode-ai/acme.git")).toEqual({
       pkg: "acme",
-      version: "git+https://github.com/opencode/acme.git",
+      version: "git+https://github.com/nocode-ai/acme.git",
     })
   })
 
   test("parses scoped package with git+https url", () => {
-    expect(parsePluginSpecifier("@opencode/acme@git+https://github.com/opencode/acme.git")).toEqual({
-      pkg: "@opencode/acme",
-      version: "git+https://github.com/opencode/acme.git",
+    expect(parsePluginSpecifier("@nocode-ai/acme@git+https://github.com/nocode-ai/acme.git")).toEqual({
+      pkg: "@nocode-ai/acme",
+      version: "git+https://github.com/nocode-ai/acme.git",
     })
   })
 
   test("parses package with git+ssh url containing another @", () => {
-    expect(parsePluginSpecifier("acme@git+ssh://git@github.com/opencode/acme.git")).toEqual({
+    expect(parsePluginSpecifier("acme@git+ssh://git@github.com/nocode-ai/acme.git")).toEqual({
       pkg: "acme",
-      version: "git+ssh://git@github.com/opencode/acme.git",
+      version: "git+ssh://git@github.com/nocode-ai/acme.git",
     })
   })
 
   test("parses scoped package with git+ssh url containing another @", () => {
-    expect(parsePluginSpecifier("@opencode/acme@git+ssh://git@github.com/opencode/acme.git")).toEqual({
-      pkg: "@opencode/acme",
-      version: "git+ssh://git@github.com/opencode/acme.git",
+    expect(parsePluginSpecifier("@nocode-ai/acme@git+ssh://git@github.com/nocode-ai/acme.git")).toEqual({
+      pkg: "@nocode-ai/acme",
+      version: "git+ssh://git@github.com/nocode-ai/acme.git",
     })
   })
 
   test("parses unaliased git+ssh url", () => {
-    expect(parsePluginSpecifier("git+ssh://git@github.com/opencode/acme.git")).toEqual({
-      pkg: "git+ssh://git@github.com/opencode/acme.git",
+    expect(parsePluginSpecifier("git+ssh://git@github.com/nocode-ai/acme.git")).toEqual({
+      pkg: "git+ssh://git@github.com/nocode-ai/acme.git",
       version: "",
     })
   })
 
   test("parses npm alias using the alias name", () => {
-    expect(parsePluginSpecifier("acme@npm:@opencode/acme@1.0.0")).toEqual({
+    expect(parsePluginSpecifier("acme@npm:@nocode-ai/acme@1.0.0")).toEqual({
       pkg: "acme",
-      version: "npm:@opencode/acme@1.0.0",
+      version: "npm:@nocode-ai/acme@1.0.0",
     })
   })
 
   test("parses bare npm protocol specifier using the target package", () => {
-    expect(parsePluginSpecifier("npm:@opencode/acme@1.0.0")).toEqual({
-      pkg: "@opencode/acme",
+    expect(parsePluginSpecifier("npm:@nocode-ai/acme@1.0.0")).toEqual({
+      pkg: "@nocode-ai/acme",
       version: "1.0.0",
     })
   })
 
   test("parses unversioned npm protocol specifier", () => {
-    expect(parsePluginSpecifier("npm:@opencode/acme")).toEqual({
-      pkg: "@opencode/acme",
+    expect(parsePluginSpecifier("npm:@nocode-ai/acme")).toEqual({
+      pkg: "@nocode-ai/acme",
       version: "latest",
     })
   })

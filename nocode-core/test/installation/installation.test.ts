@@ -3,7 +3,7 @@ import { Effect, Layer, Stream } from "effect"
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
 import { Installation } from "../../src/installation"
-import { InstallationChannel } from "@opencode-ai/core/installation/version"
+import { InstallationChannel } from "@nocode-ai-ai/core/installation/version"
 
 const encoder = new TextEncoder()
 
@@ -86,7 +86,7 @@ describe("installation", () => {
         Installation.Service.use((svc) => svc.latest("npm")).pipe(Effect.provide(layer)),
       )
       expect(result).toBe("1.5.0")
-      expect(calls).toContainEqual(["npm", "view", `opencode-ai@${InstallationChannel}`, "version", "--json"])
+      expect(calls).toContainEqual(["npm", "view", `nocode-ai-ai@${InstallationChannel}`, "version", "--json"])
     })
 
     test("reads npm versions via bun pm view", async () => {
@@ -106,7 +106,7 @@ describe("installation", () => {
         Installation.Service.use((svc) => svc.latest("bun")).pipe(Effect.provide(layer)),
       )
       expect(result).toBe("1.6.0")
-      expect(calls).toContainEqual(["bun", "pm", "view", `opencode-ai@${InstallationChannel}`, "version", "--json"])
+      expect(calls).toContainEqual(["bun", "pm", "view", `nocode-ai-ai@${InstallationChannel}`, "version", "--json"])
     })
 
     test("reads npm versions via pnpm view", async () => {
@@ -126,7 +126,7 @@ describe("installation", () => {
         Installation.Service.use((svc) => svc.latest("pnpm")).pipe(Effect.provide(layer)),
       )
       expect(result).toBe("1.7.0")
-      expect(calls).toContainEqual(["pnpm", "view", `opencode-ai@${InstallationChannel}`, "version", "--json"])
+      expect(calls).toContainEqual(["pnpm", "view", `nocode-ai-ai@${InstallationChannel}`, "version", "--json"])
     })
 
     test("reads scoop manifest versions", async () => {
@@ -152,8 +152,8 @@ describe("installation", () => {
         () => jsonResponse({ versions: { stable: "2.0.0" } }),
         (cmd, args) => {
           // getBrewFormula: return core formula (no tap)
-          if (cmd === "brew" && args.includes("--formula") && args.includes("anomalyco/tap/opencode")) return ""
-          if (cmd === "brew" && args.includes("--formula") && args.includes("opencode")) return "opencode"
+          if (cmd === "brew" && args.includes("--formula") && args.includes("anomalyco/tap/nocode-ai")) return ""
+          if (cmd === "brew" && args.includes("--formula") && args.includes("nocode-ai")) return "nocode-ai"
           return ""
         },
       )
@@ -171,7 +171,7 @@ describe("installation", () => {
       const layer = testLayer(
         () => jsonResponse({}), // HTTP not used for tap formula
         (cmd, args) => {
-          if (cmd === "brew" && args.includes("anomalyco/tap/opencode") && args.includes("--formula")) return "opencode"
+          if (cmd === "brew" && args.includes("anomalyco/tap/nocode-ai") && args.includes("--formula")) return "nocode-ai"
           if (cmd === "brew" && args.includes("--json=v2")) return brewInfoJson
           return ""
         },

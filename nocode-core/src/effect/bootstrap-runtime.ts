@@ -10,8 +10,8 @@ import { Vcs } from "@/project"
 import { Snapshot } from "@/snapshot"
 import { Bus } from "@/bus"
 import { Config } from "@/config"
-import * as Observability from "@opencode-ai/core/effect/observability"
-import { memoMap } from "@opencode-ai/core/effect/memo-map"
+import * as Observability from "@nocode-ai-ai/core/effect/observability"
+import { memoMap } from "@nocode-ai-ai/core/effect/memo-map"
 
 export const BootstrapLayer = Layer.mergeAll(
   Config.defaultLayer,

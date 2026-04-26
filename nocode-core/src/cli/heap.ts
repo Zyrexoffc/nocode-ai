@@ -1,7 +1,7 @@
 import path from "path"
 import { writeHeapSnapshot } from "node:v8"
-import { Flag } from "@opencode-ai/core/flag/flag"
-import { Global } from "@opencode-ai/core/global"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Log } from "@/util"
 
 const log = Log.create({ service: "heap" })
@@ -13,7 +13,7 @@ let lock = false
 let armed = true
 
 export function start() {
-  if (!Flag.OPENCODE_AUTO_HEAP_SNAPSHOT) return
+  if (!Flag.NOCODE_AI_AUTO_HEAP_SNAPSHOT) return
   if (timer) return
 
   const run = async () => {

@@ -3,11 +3,11 @@ import path from "path"
 import { pathToFileURL } from "url"
 import { UI } from "../ui"
 import { cmd } from "./cmd"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { bootstrap } from "../bootstrap"
 import { EOL } from "os"
 import { Filesystem } from "../../util"
-import { createOpencodeClient, type OpencodeClient, type ToolPart } from "@opencode-ai/sdk/v2"
+import { createOpencodeClient, type OpencodeClient, type ToolPart } from "@nocode-ai-ai/sdk/v2"
 import { Server } from "../../server/server"
 import { Provider } from "../../provider"
 import { Agent } from "../../agent/agent"
@@ -212,7 +212,7 @@ function normalizePath(input?: string) {
 
 export const RunCommand = cmd({
   command: "run [message..]",
-  describe: "run opencode with a message",
+  describe: "run nocode-ai with a message",
   builder: (yargs: Argv) => {
     return yargs
       .positional("message", {
@@ -270,12 +270,12 @@ export const RunCommand = cmd({
       })
       .option("attach", {
         type: "string",
-        describe: "attach to a running opencode server (e.g., http://localhost:4096)",
+        describe: "attach to a running nocode-ai server (e.g., http://localhost:4096)",
       })
       .option("password", {
         alias: ["p"],
         type: "string",
-        describe: "basic auth password (defaults to OPENCODE_SERVER_PASSWORD)",
+        describe: "basic auth password (defaults to NOCODE_AI_SERVER_PASSWORD)",
       })
       .option("dir", {
         type: "string",
@@ -393,7 +393,7 @@ export const RunCommand = cmd({
     async function share(sdk: OpencodeClient, sessionID: string) {
       const cfg = await sdk.config.get()
       if (!cfg.data) return
-      if (cfg.data.share !== "auto" && !Flag.OPENCODE_AUTO_SHARE && !args.share) return
+      if (cfg.data.share !== "auto" && !Flag.NOCODE_AI_AUTO_SHARE && !args.share) return
       const res = await sdk.session.share({ sessionID }).catch((error) => {
         if (error instanceof Error && error.message.includes("disabled")) {
           UI.println(UI.Style.TEXT_DANGER_BOLD + "!  " + error.message)
@@ -659,9 +659,9 @@ export const RunCommand = cmd({
 
     if (args.attach) {
       const headers = (() => {
-        const password = args.password ?? process.env.OPENCODE_SERVER_PASSWORD
+        const password = args.password ?? process.env.NOCODE_AI_SERVER_PASSWORD
         if (!password) return undefined
-        const username = process.env.OPENCODE_SERVER_USERNAME ?? "opencode"
+        const username = process.env.NOCODE_AI_SERVER_USERNAME ?? "nocode-ai"
         const auth = `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`
         return { Authorization: auth }
       })()
@@ -674,7 +674,7 @@ export const RunCommand = cmd({
         const request = new Request(input, init)
         return Server.Default().app.fetch(request)
       }) as typeof globalThis.fetch
-      const sdk = createOpencodeClient({ baseUrl: "http://opencode.internal", fetch: fetchFn })
+      const sdk = createOpencodeClient({ baseUrl: "http://nocode-ai.internal", fetch: fetchFn })
       await execute(sdk)
     })
   },

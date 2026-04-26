@@ -3,12 +3,12 @@ import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
 import { formatPatch, structuredPatch } from "diff"
 import path from "path"
 import z from "zod"
-import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
+import { CrossSpawnSpawner } from "@nocode-ai-ai/core/cross-spawn-spawner"
 import { InstanceState } from "@/effect"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
-import { Hash } from "@opencode-ai/core/util/hash"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
+import { Hash } from "@nocode-ai-ai/core/util/hash"
 import { Config } from "../config"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Log } from "../util"
 import { withStatics } from "@/util/schema"
 import { zod } from "@/util/effect-zod"
@@ -55,7 +55,7 @@ export interface Interface {
   readonly diffFull: (from: string, to: string) => Effect.Effect<FileDiff[]>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Snapshot") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Snapshot") {}
 
 export const layer: Layer.Layer<
   Service,

@@ -101,7 +101,7 @@ function queryZedEditorContents(dbPath: string, row: ZedEditorRow) {
 
 export function resolveZedDbPath() {
   const candidates = [
-    process.env.OPENCODE_ZED_DB,
+    process.env.NOCODE_AI_ZED_DB,
     path.join(os.homedir(), "Library", "Application Support", "Zed", "db", "0-stable", "db.sqlite"),
     path.join(os.homedir(), ".local", "share", "zed", "db", "0-stable", "db.sqlite"),
   ].filter((item): item is string => Boolean(item))

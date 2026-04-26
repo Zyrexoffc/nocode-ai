@@ -1,6 +1,6 @@
 # Schema migration
 
-Practical reference for migrating data types in `packages/opencode` from
+Practical reference for migrating data types in `packages/nocode-ai` from
 Zod-first definitions to Effect Schema with Zod compatibility shims.
 
 ## Goal
@@ -142,7 +142,7 @@ mechanical.
 
 ### `src/config/` ✅ complete
 
-All of `packages/opencode/src/config/` has been migrated. Files that still
+All of `packages/nocode-ai/src/config/` has been migrated. Files that still
 import `z` do so only for local `ZodOverride` bridges or for `z.ZodType`
 type annotations — the `export const <Info|Spec>` values are all Effect
 Schema at source.

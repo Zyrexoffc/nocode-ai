@@ -1,4 +1,4 @@
-import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
+import { CrossSpawnSpawner } from "@nocode-ai-ai/core/cross-spawn-spawner"
 import { Effect, Layer } from "effect"
 import { afterEach, describe, expect } from "bun:test"
 import path from "path"
@@ -35,7 +35,7 @@ describe("tool.skill", () => {
     provideTmpdirInstance(
       (dir) =>
         Effect.gen(function* () {
-          const skill = path.join(dir, ".opencode", "skill", "tool-skill")
+          const skill = path.join(dir, ".nocode-ai", "skill", "tool-skill")
           yield* Effect.promise(() =>
             Bun.write(
               path.join(skill, "SKILL.md"),
@@ -52,18 +52,18 @@ Use this skill.
           )
           yield* Effect.promise(() => Bun.write(path.join(skill, "scripts", "demo.txt"), "demo"))
 
-          const home = process.env.OPENCODE_TEST_HOME
-          process.env.OPENCODE_TEST_HOME = dir
+          const home = process.env.NOCODE_AI_TEST_HOME
+          process.env.NOCODE_AI_TEST_HOME = dir
           yield* Effect.addFinalizer(() =>
             Effect.sync(() => {
-              process.env.OPENCODE_TEST_HOME = home
+              process.env.NOCODE_AI_TEST_HOME = home
             }),
           )
 
           const registry = yield* ToolRegistry.Service
           const agent = { name: "build", mode: "primary" as const, permission: [], options: {} }
           const tool = (yield* registry.tools({
-            providerID: "opencode" as any,
+            providerID: "nocode-ai" as any,
             modelID: "gpt-5" as any,
             agent,
           })).find((tool) => tool.id === SkillTool.id)

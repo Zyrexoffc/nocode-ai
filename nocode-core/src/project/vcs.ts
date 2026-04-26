@@ -4,7 +4,7 @@ import path from "path"
 import { Bus } from "@/bus"
 import { BusEvent } from "@/bus/bus-event"
 import { InstanceState } from "@/effect"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { FileWatcher } from "@/file/watcher"
 import { Git } from "@/git"
 import { Log } from "@/util"
@@ -145,7 +145,7 @@ interface State {
   root: Git.Base | undefined
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Vcs") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Vcs") {}
 
 export const layer: Layer.Layer<Service, never, AppFileSystem.Service | Git.Service | Bus.Service> = Layer.effect(
   Service,

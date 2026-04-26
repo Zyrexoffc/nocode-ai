@@ -8,7 +8,7 @@ import { useProject } from "@tui/context/project"
 import { useKeybind } from "../context/keybind"
 import { useTheme } from "../context/theme"
 import { useSDK } from "../context/sdk"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { DialogSessionRename } from "./dialog-session-rename"
 import { Keybind } from "@/util"
 import { createDebouncedSignal } from "../util/signal"
@@ -127,7 +127,7 @@ export function DialogSessionList() {
         }
 
         let footer = ""
-        if (Flag.OPENCODE_EXPERIMENTAL_WORKSPACES) {
+        if (Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES) {
           if (x.workspaceID) {
             let desc = "unknown"
             if (workspace) {
@@ -251,7 +251,7 @@ export function DialogSessionList() {
           keybind: Keybind.parse("ctrl+w")[0],
           title: "new workspace",
           side: "right",
-          disabled: !Flag.OPENCODE_EXPERIMENTAL_WORKSPACES,
+          disabled: !Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES,
           onTrigger: () => {
             createWorkspace()
           },

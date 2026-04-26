@@ -5,24 +5,24 @@ import z from "zod"
 import { Effect, Layer, Context, Schema } from "effect"
 import { zod } from "@/util/effect-zod"
 import { withStatics } from "@/util/schema"
-import { NamedError } from "@opencode-ai/core/util/error"
+import { NamedError } from "@nocode-ai-ai/core/util/error"
 import type { Agent } from "@/agent/agent"
 import { Bus } from "@/bus"
 import { InstanceState } from "@/effect"
-import { Flag } from "@opencode-ai/core/flag/flag"
-import { Global } from "@opencode-ai/core/global"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Permission } from "@/permission"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { Config } from "../config"
 import { ConfigMarkdown } from "../config"
-import { Glob } from "@opencode-ai/core/util/glob"
+import { Glob } from "@nocode-ai-ai/core/util/glob"
 import { Log } from "../util"
 import { Discovery } from "./discovery"
 
 const log = Log.create({ service: "skill" })
 const EXTERNAL_DIRS = [".claude", ".agents"]
 const EXTERNAL_SKILL_PATTERN = "skills/**/SKILL.md"
-const OPENCODE_SKILL_PATTERN = "{skill,skills}/**/SKILL.md"
+const NOCODE_AI_SKILL_PATTERN = "{skill,skills}/**/SKILL.md"
 const SKILL_PATTERN = "**/SKILL.md"
 
 export const Info = Schema.Struct({
@@ -152,7 +152,7 @@ const discoverSkills = Effect.fnUntraced(function* (
 ) {
   const state: ScanState = { matches: new Set(), dirs: new Set() }
 
-  if (!Flag.OPENCODE_DISABLE_EXTERNAL_SKILLS) {
+  if (!Flag.NOCODE_AI_DISABLE_EXTERNAL_SKILLS) {
     for (const dir of EXTERNAL_DIRS) {
       const root = path.join(Global.Path.home, dir)
       if (!(yield* fsys.isDir(root))) continue
@@ -170,7 +170,7 @@ const discoverSkills = Effect.fnUntraced(function* (
 
   const configDirs = yield* config.directories()
   for (const dir of configDirs) {
-    yield* scan(state, dir, OPENCODE_SKILL_PATTERN)
+    yield* scan(state, dir, NOCODE_AI_SKILL_PATTERN)
   }
 
   const cfg = yield* config.get()
@@ -207,7 +207,7 @@ const loadSkills = Effect.fnUntraced(function* (state: State, discovered: Discov
   log.info("init", { count: Object.keys(state.skills).length })
 })
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Skill") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Skill") {}
 
 export const layer = Layer.effect(
   Service,

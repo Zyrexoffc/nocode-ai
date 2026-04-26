@@ -3,11 +3,11 @@ import path from "path"
 import { describe, expect, test } from "bun:test"
 import { Effect, Layer, Stream } from "effect"
 import { NodeFileSystem } from "@effect/platform-node"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
-import { Global } from "@opencode-ai/core/global"
-import { EffectFlock } from "@opencode-ai/core/util/effect-flock"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
+import { Global } from "@nocode-ai-ai/core/global"
+import { EffectFlock } from "@nocode-ai-ai/core/util/effect-flock"
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
-import { Npm } from "@opencode-ai/core/npm"
+import { Npm } from "@nocode-ai-ai/core/npm"
 import { tmpdir } from "./fixture/fixture"
 
 const win = process.platform === "win32"
@@ -56,14 +56,14 @@ const writePackage = (dir: string, pkg: Record<string, unknown>) =>
 
 describe("Npm.sanitize", () => {
   test("keeps normal scoped package specs unchanged", () => {
-    expect(Npm.sanitize("@opencode/acme")).toBe("@opencode/acme")
-    expect(Npm.sanitize("@opencode/acme@1.0.0")).toBe("@opencode/acme@1.0.0")
+    expect(Npm.sanitize("@nocode-ai/acme")).toBe("@nocode-ai/acme")
+    expect(Npm.sanitize("@nocode-ai/acme@1.0.0")).toBe("@nocode-ai/acme@1.0.0")
     expect(Npm.sanitize("prettier")).toBe("prettier")
   })
 
   test("handles git https specs", () => {
-    const spec = "acme@git+https://github.com/opencode/acme.git"
-    const expected = win ? "acme@git+https_//github.com/opencode/acme.git" : spec
+    const spec = "acme@git+https://github.com/nocode-ai/acme.git"
+    const expected = win ? "acme@git+https_//github.com/nocode-ai/acme.git" : spec
     expect(Npm.sanitize(spec)).toBe(expected)
   })
 })

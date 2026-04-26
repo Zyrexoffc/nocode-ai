@@ -1,6 +1,6 @@
 # Server package extraction
 
-Practical reference for extracting a future `packages/server` from the current `packages/opencode` monolith while `packages/core` is still being migrated to Effect.
+Practical reference for extracting a future `packages/server` from the current `packages/nocode-ai` monolith while `packages/core` is still being migrated to Effect.
 
 This document is intentionally execution-oriented.
 
@@ -21,8 +21,8 @@ Do this without blocking on the full `packages/core` extraction.
 
 Target package layout:
 
-- `packages/core` - all opencode services, Effect-first source of truth
-- `packages/server` - opencode server, with separate contract and implementation, still producing `openapi.json`
+- `packages/core` - all nocode-ai services, Effect-first source of truth
+- `packages/server` - nocode-ai server, with separate contract and implementation, still producing `openapi.json`
 - `packages/cli` - TUI + CLI entrypoints
 - `packages/sdk` - generated from the server OpenAPI spec, may add higher-level wrappers
 - `packages/plugin` - generated or semi-hand-rolled non-Effect package built from core plugin definitions
@@ -30,12 +30,12 @@ Target package layout:
 Desired user stories:
 
 - import from `core` and build a custom agent or app-specific runtime
-- import from `server` and embed the full opencode server into an existing Node app
+- import from `server` and embed the full nocode-ai server into an existing Node app
 - spawn the CLI and talk to the server through that boundary
 
 ## Current state
 
-Everything still lives in `packages/opencode`.
+Everything still lives in `packages/nocode-ai`.
 
 Important current facts:
 
@@ -45,7 +45,7 @@ Important current facts:
 - current OpenAPI generation is Hono-based through `Server.openapi()` and `cli/cmd/generate.ts`
 - the Effect runtime and app layer are centralized in `src/effect/app-runtime.ts` and `src/effect/run-service.ts`
 - there are already bridged Effect `HttpApi` slices under `src/server/routes/instance/httpapi/*`
-- those slices are mounted into the Hono server behind `OPENCODE_EXPERIMENTAL_HTTPAPI`
+- those slices are mounted into the Hono server behind `NOCODE_AI_EXPERIMENTAL_HTTPAPI`
 - the bridge currently covers `question`, `permission`, `provider`, partial `config`, and partial `project` routes
 
 This means the package split should start from an extraction path, not from greenfield package ownership.
@@ -70,7 +70,7 @@ Relevant `opentunnel` files:
 - `packages/server/src/api/client.ts`
 - `packages/server/src/index.ts`
 
-The intended direction here is the same, but the current `opencode` package split is earlier in the migration.
+The intended direction here is the same, but the current `nocode-ai` package split is earlier in the migration.
 
 That means:
 
@@ -87,16 +87,16 @@ Do not make it the runtime host yet.
 Why:
 
 - `packages/core` does not exist yet
-- the current server host still lives in `packages/opencode`
+- the current server host still lives in `packages/nocode-ai`
 - moving host ownership immediately would force a large package and runtime shuffle while Effect service extraction is still in flight
-- if `packages/server` imports services from `packages/opencode` while `packages/opencode` imports `packages/server` to host routes, we create a package cycle immediately
+- if `packages/server` imports services from `packages/nocode-ai` while `packages/nocode-ai` imports `packages/server` to host routes, we create a package cycle immediately
 
 Short version:
 
 1. create `packages/server`
 2. move pure `HttpApi` contracts there
 3. move handler factories there
-4. keep `packages/opencode` as the temporary Hono host
+4. keep `packages/nocode-ai` as the temporary Hono host
 5. merge `packages/server` OpenAPI with the legacy Hono OpenAPI during the transition
 6. move server hosting later, after `packages/core` exists enough
 
@@ -104,11 +104,11 @@ Short version:
 
 Phase 1 rule:
 
-- `packages/server` must not import from `packages/opencode`
+- `packages/server` must not import from `packages/nocode-ai`
 
 Allowed in phase 1:
 
-- `packages/opencode` imports `packages/server`
+- `packages/nocode-ai` imports `packages/server`
 - `packages/server` accepts host-provided services, layers, or callbacks as inputs
 - `packages/server` may temporarily own transport-local placeholder schemas when a canonical shared schema does not exist yet
 
@@ -116,7 +116,7 @@ Future rule after `packages/core` exists:
 
 - `packages/server` imports from `packages/core`
 - `packages/cli` imports from `packages/server` and `packages/core`
-- `packages/opencode` shrinks or disappears as package responsibilities are fully split
+- `packages/nocode-ai` shrinks or disappears as package responsibilities are fully split
 
 ## HttpApi model
 
@@ -145,7 +145,7 @@ During the transition there is still one spec artifact.
 Default rule:
 
 - `packages/server` generates OpenAPI from `HttpApi` contract
-- `packages/opencode` keeps generating legacy OpenAPI from Hono routes
+- `packages/nocode-ai` keeps generating legacy OpenAPI from Hono routes
 - the temporary exported server spec is a merged document
 - `packages/sdk` continues consuming one `openapi.json`
 
@@ -191,7 +191,7 @@ Phase 1 responsibilities:
 - own pure API contracts
 - own handler factories for migrated slices
 - own contract-generated OpenAPI
-- expose host adapters needed by `packages/opencode`
+- expose host adapters needed by `packages/nocode-ai`
 
 Phase 1 non-goals:
 
@@ -243,7 +243,7 @@ Move first into `packages/server`:
 - any new `HttpApi` route groups
 - transport-local OpenAPI generation for migrated routes
 
-Keep in `packages/opencode` for now:
+Keep in `packages/nocode-ai` for now:
 
 - `src/server/server.ts`
 - `src/server/control/index.ts`
@@ -321,7 +321,7 @@ Use the first slice to prove:
 
 - package boundary
 - contract and implementation split
-- host mounting from `packages/opencode`
+- host mounting from `packages/nocode-ai`
 - merged OpenAPI output
 - test ergonomics for future slices
 
@@ -345,7 +345,7 @@ Rules:
 
 - no production behavior changes
 - no host server changes yet
-- no imports from `packages/opencode` inside `packages/server`
+- no imports from `packages/nocode-ai` inside `packages/server`
 - prefer `opentunnel`-style naming from the start: `definition` for contracts, `api` for implementations
 
 Done means:
@@ -385,7 +385,7 @@ Scope:
 
 Rules:
 
-- `packages/server` must still not import from `packages/opencode`
+- `packages/server` must still not import from `packages/nocode-ai`
 - handler code should stay thin and service-delegating
 - do not redesign the question service itself in this PR
 
@@ -394,11 +394,11 @@ Done means:
 - `packages/server` can produce the experimental question handler
 - the package still stays cycle-free
 
-### PR 4. Mount `packages/server` question from `packages/opencode`
+### PR 4. Mount `packages/server` question from `packages/nocode-ai`
 
 Scope:
 
-- replace local experimental question route wiring in `packages/opencode`
+- replace local experimental question route wiring in `packages/nocode-ai`
 - keep the same mount path:
 - `/question`
 - `/question/:requestID/reply`
@@ -460,7 +460,7 @@ Done means:
 Scope:
 
 - add `GET /provider/auth` as the next `HttpApi` slice in `packages/server`
-- mount it in parallel from `packages/opencode`
+- mount it in parallel from `packages/nocode-ai`
 
 Why this route:
 
@@ -480,7 +480,7 @@ Done means:
 Scope:
 
 - add `GET /config/providers` as a `HttpApi` slice in `packages/server`
-- mount it in parallel from `packages/opencode`
+- mount it in parallel from `packages/nocode-ai`
 
 Why this route:
 
@@ -528,18 +528,18 @@ Scope:
 
 - move server composition into `packages/server`
 - add embeddable APIs such as `createServer(...)`, `listen(...)`, or `createApp(...)`
-- move adapter selection and server startup out of `packages/opencode`
+- move adapter selection and server startup out of `packages/nocode-ai`
 
 Rules:
 
-- do not start this while `packages/server` still depends on `packages/opencode`
+- do not start this while `packages/server` still depends on `packages/nocode-ai`
 - do not mix this with route migration PRs
 
 Done means:
 
 - `packages/server` can be embedded in another Node app
 - `packages/cli` can depend on `packages/server`
-- host logic no longer lives in `packages/opencode`
+- host logic no longer lives in `packages/nocode-ai`
 
 ## PR sizing rule
 
@@ -558,7 +558,7 @@ A route group migration is complete only when:
 
 1. the `HttpApi` contract lives in `packages/server`
 2. handler implementation lives in `packages/server`
-3. the route is mounted from the current host in `packages/opencode`
+3. the route is mounted from the current host in `packages/nocode-ai`
 4. the route appears in merged OpenAPI
 5. request and response schemas are Effect Schema-first or clearly temporary placeholders
 6. existing behavior remains unchanged
@@ -584,12 +584,12 @@ This is the biggest risk.
 
 Bad state:
 
-- `packages/server` imports services or runtime from `packages/opencode`
-- `packages/opencode` imports route definitions or handlers from `packages/server`
+- `packages/server` imports services or runtime from `packages/nocode-ai`
+- `packages/nocode-ai` imports route definitions or handlers from `packages/server`
 
 Avoid by:
 
-- keeping phase-1 `packages/server` free of `packages/opencode` imports
+- keeping phase-1 `packages/server` free of `packages/nocode-ai` imports
 - using factories and host-provided wiring instead of direct service imports
 
 ### Spec drift
@@ -646,7 +646,7 @@ Avoid by:
 - [x] add package-level exports for contract and OpenAPI
 - [ ] extract `question` contract into `packages/server`
 - [ ] extract `question` handler factory into `packages/server`
-- [ ] mount `question` from `packages/opencode`
+- [ ] mount `question` from `packages/nocode-ai`
 - [ ] merge legacy and contract OpenAPI into one document
 - [ ] add merged-spec coverage
 - [ ] migrate `GET /provider/auth`
@@ -660,9 +660,9 @@ Avoid by:
 The fastest correct path is:
 
 1. establish `packages/server` as the contract-first boundary
-2. keep `packages/opencode` as the temporary host
+2. keep `packages/nocode-ai` as the temporary host
 3. migrate a few safe JSON routes
 4. keep one merged OpenAPI document
 5. move actual host ownership only after `packages/core` can support it cleanly
 
-If a proposed PR would make `packages/server` import from `packages/opencode`, stop and restructure the boundary first.
+If a proposed PR would make `packages/server` import from `packages/nocode-ai`, stop and restructure the boundary first.

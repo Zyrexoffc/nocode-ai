@@ -35,7 +35,7 @@ function setup() {
     mdns: false,
     port: 0,
     hostname: "127.0.0.1",
-    mdnsDomain: "opencode.local",
+    mdnsDomain: "nocode-ai.local",
     cors: [],
   })
   spyOn(Win32, "win32DisableProcessedInput").mockImplementation(() => {})
@@ -51,7 +51,7 @@ describe("tui thread", () => {
     const { TuiThreadCommand } = await import("../../../src/cli/cmd/tui/thread")
     const args: Parameters<NonNullable<typeof TuiThreadCommand.handler>>[0] = {
       _: [],
-      $0: "opencode",
+      $0: "nocode-ai",
       project,
       prompt: "hi",
       model: undefined,
@@ -62,8 +62,8 @@ describe("tui thread", () => {
       port: 0,
       hostname: "127.0.0.1",
       mdns: false,
-      "mdns-domain": "opencode.local",
-      mdnsDomain: "opencode.local",
+      "mdns-domain": "nocode-ai.local",
+      mdnsDomain: "nocode-ai.local",
       cors: [],
     }
     return TuiThreadCommand.handler(args)

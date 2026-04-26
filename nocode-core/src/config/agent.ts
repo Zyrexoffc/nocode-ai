@@ -5,8 +5,8 @@ import { Bus } from "@/bus"
 import { zod } from "@/util/effect-zod"
 import { PositiveInt, withStatics } from "@/util/schema"
 import { Log } from "../util"
-import { NamedError } from "@opencode-ai/core/util/error"
-import { Glob } from "@opencode-ai/core/util/glob"
+import { NamedError } from "@nocode-ai-ai/core/util/error"
+import { Glob } from "@nocode-ai-ai/core/util/glob"
 import { configEntryNameFromPath } from "./entry-name"
 import * as ConfigMarkdown from "./markdown"
 import { ConfigModelID } from "./model-id"
@@ -126,7 +126,7 @@ export async function load(dir: string) {
     })
     if (!md) continue
 
-    const patterns = ["/.opencode/agent/", "/.opencode/agents/", "/agent/", "/agents/"]
+    const patterns = ["/.nocode-ai/agent/", "/.nocode-ai/agents/", "/agent/", "/agents/"]
     const name = configEntryNameFromPath(item, patterns)
 
     const config = {

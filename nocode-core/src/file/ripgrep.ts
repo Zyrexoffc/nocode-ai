@@ -1,15 +1,15 @@
 import path from "path"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { Cause, Context, Effect, Fiber, Layer, Queue, Schema, Stream } from "effect"
 import type { PlatformError } from "effect/PlatformError"
 import { FetchHttpClient, HttpClient, HttpClientRequest } from "effect/unstable/http"
 import { ChildProcess } from "effect/unstable/process"
 import { ChildProcessSpawner } from "effect/unstable/process/ChildProcessSpawner"
 
-import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
-import { Global } from "@opencode-ai/core/global"
+import { CrossSpawnSpawner } from "@nocode-ai-ai/core/cross-spawn-spawner"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Log } from "@/util"
-import { sanitizedProcessEnv } from "@opencode-ai/core/util/opencode-process"
+import { sanitizedProcessEnv } from "@nocode-ai-ai/core/util/nocode-ai-process"
 import { which } from "@/util/which"
 import { zod } from "@/util/effect-zod"
 import { withStatics } from "@/util/schema"
@@ -140,7 +140,7 @@ export interface Interface {
   readonly search: (input: SearchInput) => Effect.Effect<SearchResult, PlatformError | Error>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Ripgrep") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Ripgrep") {}
 
 function env() {
   const env = sanitizedProcessEnv()
@@ -437,7 +437,7 @@ export const layer: Layer.Layer<Service, never, AppFileSystem.Service | ChildPro
 
         const root: Node = { name: "", children: new Map() }
         for (const file of list) {
-          if (file.includes(".opencode")) continue
+          if (file.includes(".nocode-ai")) continue
           const parts = file.split(path.sep)
           if (parts.length < 2) continue
           let node = root

@@ -3,7 +3,7 @@ import { SessionID } from "@/session/schema"
 import { SyncEvent } from "@/sync"
 import { Effect, Layer, Scope, Context } from "effect"
 import { Config } from "../config"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import * as ShareNext from "./share-next"
 
 export interface Interface {
@@ -12,7 +12,7 @@ export interface Interface {
   readonly unshare: (sessionID: SessionID) => Effect.Effect<void, unknown>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/SessionShare") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/SessionShare") {}
 
 export const layer = Layer.effect(
   Service,
@@ -41,7 +41,7 @@ export const layer = Layer.effect(
       const result = yield* session.create(input)
       if (result.parentID) return result
       const conf = yield* cfg.get()
-      if (!(Flag.OPENCODE_AUTO_SHARE || conf.share === "auto")) return result
+      if (!(Flag.NOCODE_AI_AUTO_SHARE || conf.share === "auto")) return result
       yield* share(result.id).pipe(Effect.ignore, Effect.forkIn(scope))
       return result
     })

@@ -8,10 +8,10 @@ import { map, pipe, sortBy, values } from "remeda"
 import path from "path"
 import os from "os"
 import { Config } from "../../config"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Plugin } from "../../plugin"
 import { Instance } from "../../project/instance"
-import type { Hooks } from "@opencode-ai/plugin"
+import type { Hooks } from "@nocode-ai-ai/plugin"
 import { Process } from "../../util"
 import { text } from "node:stream/consumers"
 import { Effect } from "effect"
@@ -276,7 +276,7 @@ export const ProvidersLoginCommand = cmd({
   builder: (yargs) =>
     yargs
       .positional("url", {
-        describe: "opencode auth provider",
+        describe: "nocode-ai auth provider",
         type: "string",
       })
       .option("provider", {
@@ -297,7 +297,7 @@ export const ProvidersLoginCommand = cmd({
         prompts.intro("Add credential")
         if (args.url) {
           const url = args.url.replace(/\/+$/, "")
-          const wellknown = (await fetch(`${url}/.well-known/opencode`).then((x) => x.json())) as {
+          const wellknown = (await fetch(`${url}/.well-known/nocode-ai`).then((x) => x.json())) as {
             auth: { command: string[]; env: string }
           }
           prompts.log.info(`Running \`${wellknown.auth.command.join(" ")}\``)
@@ -348,7 +348,7 @@ export const ProvidersLoginCommand = cmd({
         )
 
         const priority: Record<string, number> = {
-          opencode: 0,
+          nocode-ai: 0,
           openai: 1,
           "github-copilot": 2,
           google: 3,
@@ -375,7 +375,7 @@ export const ProvidersLoginCommand = cmd({
               label: x.name,
               value: x.id,
               hint: {
-                opencode: "recommended",
+                nocode-ai: "recommended",
                 openai: "ChatGPT Plus/Pro or API key",
               }[x.id],
             })),
@@ -435,7 +435,7 @@ export const ProvidersLoginCommand = cmd({
           }
 
           prompts.log.warn(
-            `This only stores a credential for ${provider} - you will need configure it in opencode.json, check the docs for examples.`,
+            `This only stores a credential for ${provider} - you will need configure it in nocode-ai.json, check the docs for examples.`,
           )
         }
 
@@ -444,13 +444,13 @@ export const ProvidersLoginCommand = cmd({
             "Amazon Bedrock authentication priority:\n" +
               "  1. Bearer token (AWS_BEARER_TOKEN_BEDROCK or /connect)\n" +
               "  2. AWS credential chain (profile, access keys, IAM roles, EKS IRSA)\n\n" +
-              "Configure via opencode.json options (profile, region, endpoint) or\n" +
+              "Configure via nocode-ai.json options (profile, region, endpoint) or\n" +
               "AWS environment variables (AWS_PROFILE, AWS_REGION, AWS_ACCESS_KEY_ID, AWS_WEB_IDENTITY_TOKEN_FILE).",
           )
         }
 
-        if (provider === "opencode") {
-          prompts.log.info("Create an api key at https://opencode.ai/auth")
+        if (provider === "nocode-ai") {
+          prompts.log.info("Create an api key at https://nocode-ai.ai/auth")
         }
 
         if (provider === "vercel") {
@@ -459,7 +459,7 @@ export const ProvidersLoginCommand = cmd({
 
         if (["cloudflare", "cloudflare-ai-gateway"].includes(provider)) {
           prompts.log.info(
-            "Cloudflare AI Gateway can be configured with CLOUDFLARE_GATEWAY_ID, CLOUDFLARE_ACCOUNT_ID, and CLOUDFLARE_API_TOKEN environment variables. Read more: https://opencode.ai/docs/providers/#cloudflare-ai-gateway",
+            "Cloudflare AI Gateway can be configured with CLOUDFLARE_GATEWAY_ID, CLOUDFLARE_ACCOUNT_ID, and CLOUDFLARE_API_TOKEN environment variables. Read more: https://nocode-ai.ai/docs/providers/#cloudflare-ai-gateway",
           )
         }
 

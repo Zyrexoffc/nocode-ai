@@ -11,8 +11,8 @@ import type { Permission } from "../../src/permission"
 import { Agent } from "../../src/agent/agent"
 import { Truncate } from "../../src/tool"
 import { SessionID, MessageID } from "../../src/session/schema"
-import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { CrossSpawnSpawner } from "@nocode-ai-ai/core/cross-spawn-spawner"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { Plugin } from "../../src/plugin"
 
 const runtime = ManagedRuntime.make(
@@ -485,7 +485,7 @@ describe("tool.bash permissions", () => {
       test(
         `asks for external_directory permission for missing PowerShell env paths [${item.label}]`,
         withShell(item, async () => {
-          const key = "OPENCODE_TEST_MISSING"
+          const key = "NOCODE_AI_TEST_MISSING"
           const prev = process.env[key]
           delete process.env[key]
           try {
@@ -809,7 +809,7 @@ describe("tool.bash permissions", () => {
                 Effect.runPromise(
                   bash.execute(
                     {
-                      command: "cat /tmp/opencode-does-not-exist",
+                      command: "cat /tmp/nocode-ai-does-not-exist",
                       description: "Read Git Bash tmp file",
                     },
                     capture(requests, err),

@@ -75,7 +75,7 @@ interface ProcessorContext extends Input {
 
 type StreamEvent = Event
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/SessionProcessor") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/SessionProcessor") {}
 
 export const layer: Layer.Layer<
   Service,

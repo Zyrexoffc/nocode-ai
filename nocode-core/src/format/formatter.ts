@@ -1,9 +1,9 @@
-import { Npm } from "@opencode-ai/core/npm"
+import { Npm } from "@nocode-ai-ai/core/npm"
 import type { InstanceContext } from "../project/instance"
 import { Filesystem } from "../util"
 import { Process } from "../util"
 import { which } from "../util/which"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 
 export interface Context extends Pick<InstanceContext, "directory" | "worktree"> {}
 
@@ -90,7 +90,7 @@ export const oxfmt: Info = {
   },
   extensions: [".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".mts", ".cts"],
   async enabled(context) {
-    if (!Flag.OPENCODE_EXPERIMENTAL_OXFMT) return false
+    if (!Flag.NOCODE_AI_EXPERIMENTAL_OXFMT) return false
     const items = await Filesystem.findUp("package.json", context.directory, context.worktree)
     for (const item of items) {
       const json = await Filesystem.readJson<{

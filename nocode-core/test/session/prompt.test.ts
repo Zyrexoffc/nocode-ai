@@ -4,7 +4,7 @@ import { expect } from "bun:test"
 import { Cause, Effect, Exit, Fiber, Layer } from "effect"
 import path from "path"
 import { fileURLToPath } from "url"
-import { NamedError } from "@opencode-ai/core/util/error"
+import { NamedError } from "@nocode-ai-ai/core/util/error"
 import { Agent as AgentSvc } from "../../src/agent/agent"
 import { Bus } from "../../src/bus"
 import { Command } from "../../src/command"
@@ -21,7 +21,7 @@ import { Todo } from "../../src/session/todo"
 import { Session } from "../../src/session"
 import { LLM } from "../../src/session/llm"
 import { MessageV2 } from "../../src/session/message-v2"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { SessionCompaction } from "../../src/session/compaction"
 import { SessionSummary } from "../../src/session/summary"
 import { Instruction } from "../../src/session/instruction"
@@ -38,7 +38,7 @@ import { Snapshot } from "../../src/snapshot"
 import { ToolRegistry } from "../../src/tool"
 import { Truncate } from "../../src/tool"
 import { Log } from "../../src/util"
-import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
+import { CrossSpawnSpawner } from "@nocode-ai-ai/core/cross-spawn-spawner"
 import { Ripgrep } from "../../src/file/ripgrep"
 import { Format } from "../../src/format"
 import { provideTmpdirInstance, provideTmpdirServer } from "../fixture/fixture"
@@ -1673,7 +1673,7 @@ it.live("does not loop empty assistant turns for a simple reply", () =>
       const sessions = yield* Session.Service
       const session = yield* sessions.create({ title: "Prompt regression" })
 
-      yield* llm.text("packages/opencode/src/session/processor.ts")
+      yield* llm.text("packages/nocode-ai/src/session/processor.ts")
 
       const result = yield* prompt.prompt({
         sessionID: session.id,
@@ -1748,7 +1748,7 @@ it.live("applies agent variant only when using agent model", () =>
         const other = yield* prompt.prompt({
           sessionID: session.id,
           agent: "build",
-          model: { providerID: ProviderID.make("opencode"), modelID: ModelID.make("kimi-k2.5-free") },
+          model: { providerID: ProviderID.make("nocode-ai"), modelID: ModelID.make("kimi-k2.5-free") },
           noReply: true,
           parts: [{ type: "text", text: "hello" }],
         })

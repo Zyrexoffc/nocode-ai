@@ -1,6 +1,6 @@
 # Effect patterns
 
-Practical reference for new and migrated Effect code in `packages/opencode`.
+Practical reference for new and migrated Effect code in `packages/nocode-ai`.
 
 ## Choose scope
 
@@ -26,7 +26,7 @@ export interface Interface {
   readonly get: (id: FooID) => Effect.Effect<FooInfo, FooError>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Foo") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Foo") {}
 
 export const layer = Layer.effect(
   Service,

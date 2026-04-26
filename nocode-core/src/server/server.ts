@@ -3,7 +3,7 @@ import { Hono } from "hono"
 import { adapter } from "#hono"
 import { lazy } from "@/util/lazy"
 import { Log } from "@/util"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { WorkspaceID } from "@/control-plane/schema"
 import { MDNS } from "./mdns"
 import { AuthMiddleware, CompressionMiddleware, CorsMiddleware, ErrorMiddleware, LoggerMiddleware } from "./middleware"
@@ -47,10 +47,10 @@ function create(opts: { cors?: string[] }) {
 
   const runtime = adapter.create(app)
 
-  if (Flag.OPENCODE_WORKSPACE_ID) {
+  if (Flag.NOCODE_AI_WORKSPACE_ID) {
     return {
       app: app
-        .use(InstanceMiddleware(Flag.OPENCODE_WORKSPACE_ID ? WorkspaceID.make(Flag.OPENCODE_WORKSPACE_ID) : undefined))
+        .use(InstanceMiddleware(Flag.NOCODE_AI_WORKSPACE_ID ? WorkspaceID.make(Flag.NOCODE_AI_WORKSPACE_ID) : undefined))
         .use(FenceMiddleware)
         .route("/", InstanceRoutes(runtime.upgradeWebSocket)),
       runtime,
@@ -62,7 +62,7 @@ function create(opts: { cors?: string[] }) {
     .use(InstanceMiddleware())
     .route("/experimental/workspace", WorkspaceRoutes())
     .use(WorkspaceRouterMiddleware(runtime.upgradeWebSocket))
-  if (Flag.OPENCODE_EXPERIMENTAL_HTTPAPI) {
+  if (Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI) {
     const handler = ExperimentalHttpApiServer.webHandler().handler
     const context = Context.empty() as Context.Context<unknown>
     workspaceApp.get(WorkspacePaths.adaptors, (c) => handler(c.req.raw, context))
@@ -90,9 +90,9 @@ export async function openapi() {
   const result = await generateSpecs(app, {
     documentation: {
       info: {
-        title: "opencode",
+        title: "nocode-ai",
         version: "1.0.0",
-        description: "opencode api",
+        description: "nocode-ai api",
       },
       openapi: "3.1.1",
     },

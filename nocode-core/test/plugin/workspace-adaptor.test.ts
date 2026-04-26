@@ -4,17 +4,17 @@ import path from "path"
 import { pathToFileURL } from "url"
 import { tmpdir } from "../fixture/fixture"
 
-const disableDefault = process.env.OPENCODE_DISABLE_DEFAULT_PLUGINS
-process.env.OPENCODE_DISABLE_DEFAULT_PLUGINS = "1"
+const disableDefault = process.env.NOCODE_AI_DISABLE_DEFAULT_PLUGINS
+process.env.NOCODE_AI_DISABLE_DEFAULT_PLUGINS = "1"
 
-const { Flag } = await import("@opencode-ai/core/flag/flag")
+const { Flag } = await import("@nocode-ai-ai/core/flag/flag")
 const { Plugin } = await import("../../src/plugin/index")
 const { Workspace } = await import("../../src/control-plane/workspace")
 const { Instance } = await import("../../src/project/instance")
 
-const experimental = Flag.OPENCODE_EXPERIMENTAL_WORKSPACES
+const experimental = Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES
 
-Flag.OPENCODE_EXPERIMENTAL_WORKSPACES = true
+Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES = true
 
 afterEach(async () => {
   await Instance.disposeAll()
@@ -22,12 +22,12 @@ afterEach(async () => {
 
 afterAll(() => {
   if (disableDefault === undefined) {
-    delete process.env.OPENCODE_DISABLE_DEFAULT_PLUGINS
+    delete process.env.NOCODE_AI_DISABLE_DEFAULT_PLUGINS
   } else {
-    process.env.OPENCODE_DISABLE_DEFAULT_PLUGINS = disableDefault
+    process.env.NOCODE_AI_DISABLE_DEFAULT_PLUGINS = disableDefault
   }
 
-  Flag.OPENCODE_EXPERIMENTAL_WORKSPACES = experimental
+  Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES = experimental
 })
 
 describe("plugin.workspace", () => {
@@ -63,10 +63,10 @@ describe("plugin.workspace", () => {
         )
 
         await Bun.write(
-          path.join(dir, "opencode.json"),
+          path.join(dir, "nocode-ai.json"),
           JSON.stringify(
             {
-              $schema: "https://opencode.ai/config.json",
+              $schema: "https://nocode-ai.ai/config.json",
               plugin: [pathToFileURL(file).href],
             },
             null,

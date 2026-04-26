@@ -13,7 +13,7 @@ const context = Context.empty() as Context.Context<unknown>
 
 function request(route: string, directory: string, init?: RequestInit) {
   const headers = new Headers(init?.headers)
-  headers.set("x-opencode-directory", directory)
+  headers.set("x-nocode-ai-directory", directory)
   return ExperimentalHttpApiServer.webHandler().handler(
     new Request(`http://localhost${route}`, {
       ...init,

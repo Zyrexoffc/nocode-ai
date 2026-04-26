@@ -1,7 +1,7 @@
 import { Agent } from "@/agent/agent"
 import { Command } from "@/command"
 import { Format } from "@/format"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { LSP } from "@/lsp"
 import { Vcs } from "@/project"
 import { Skill } from "@/skill"
@@ -45,7 +45,7 @@ export const InstanceApi = HttpApi.make("instance")
           OpenApi.annotations({
             identifier: "instance.dispose",
             summary: "Dispose instance",
-            description: "Clean up and dispose the current OpenCode instance, releasing all resources.",
+            description: "Clean up and dispose the current NocodeAi instance, releasing all resources.",
           }),
         ),
         HttpApiEndpoint.get("path", InstancePaths.path, {
@@ -55,7 +55,7 @@ export const InstanceApi = HttpApi.make("instance")
             identifier: "path.get",
             summary: "Get paths",
             description:
-              "Retrieve the current working directory and related path information for the OpenCode instance.",
+              "Retrieve the current working directory and related path information for the NocodeAi instance.",
           }),
         ),
         HttpApiEndpoint.get("vcs", InstancePaths.vcs, {
@@ -84,7 +84,7 @@ export const InstanceApi = HttpApi.make("instance")
           OpenApi.annotations({
             identifier: "command.list",
             summary: "List commands",
-            description: "Get a list of all available commands in the OpenCode system.",
+            description: "Get a list of all available commands in the NocodeAi system.",
           }),
         ),
         HttpApiEndpoint.get("agent", InstancePaths.agent, {
@@ -93,7 +93,7 @@ export const InstanceApi = HttpApi.make("instance")
           OpenApi.annotations({
             identifier: "app.agents",
             summary: "List agents",
-            description: "Get a list of all available AI agents in the OpenCode system.",
+            description: "Get a list of all available AI agents in the NocodeAi system.",
           }),
         ),
         HttpApiEndpoint.get("skill", InstancePaths.skill, {
@@ -102,7 +102,7 @@ export const InstanceApi = HttpApi.make("instance")
           OpenApi.annotations({
             identifier: "app.skills",
             summary: "List skills",
-            description: "Get a list of all available skills in the OpenCode system.",
+            description: "Get a list of all available skills in the NocodeAi system.",
           }),
         ),
         HttpApiEndpoint.get("lsp", InstancePaths.lsp, {
@@ -134,7 +134,7 @@ export const InstanceApi = HttpApi.make("instance")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "opencode experimental HttpApi",
+      title: "nocode-ai experimental HttpApi",
       version: "0.0.1",
       description: "Experimental HttpApi surface for selected instance routes.",
     }),

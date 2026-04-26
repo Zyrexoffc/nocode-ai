@@ -4,18 +4,18 @@ import type {
   Plugin as PluginInstance,
   PluginModule,
   WorkspaceAdaptor as PluginWorkspaceAdaptor,
-} from "@opencode-ai/plugin"
+} from "@nocode-ai-ai/plugin"
 import { Config } from "../config"
 import { Bus } from "../bus"
 import { Log } from "../util"
-import { createOpencodeClient } from "@opencode-ai/sdk"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { createOpencodeClient } from "@nocode-ai-ai/sdk"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { CodexAuthPlugin } from "./codex"
 import { Session } from "../session"
-import { NamedError } from "@opencode-ai/core/util/error"
+import { NamedError } from "@nocode-ai-ai/core/util/error"
 import { CopilotAuthPlugin } from "./github-copilot/copilot"
-import { gitlabAuthPlugin as GitlabAuthPlugin } from "opencode-gitlab-auth"
-import { PoeAuthPlugin } from "opencode-poe-auth"
+import { gitlabAuthPlugin as GitlabAuthPlugin } from "nocode-ai-gitlab-auth"
+import { PoeAuthPlugin } from "nocode-ai-poe-auth"
 import { CloudflareAIGatewayAuthPlugin, CloudflareWorkersAuthPlugin } from "./cloudflare"
 import { Effect, Layer, Context, Stream } from "effect"
 import { EffectBridge } from "@/effect"
@@ -51,7 +51,7 @@ export interface Interface {
   readonly init: () => Effect.Effect<void>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Plugin") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Plugin") {}
 
 // Built-in plugins that are directly imported (not installed from npm)
 const INTERNAL_PLUGINS: PluginInstance[] = [
@@ -122,9 +122,9 @@ export const layer = Layer.effect(
         const client = createOpencodeClient({
           baseUrl: "http://localhost:4096",
           directory: ctx.directory,
-          headers: Flag.OPENCODE_SERVER_PASSWORD
+          headers: Flag.NOCODE_AI_SERVER_PASSWORD
             ? {
-                Authorization: `Basic ${Buffer.from(`${Flag.OPENCODE_SERVER_USERNAME ?? "opencode"}:${Flag.OPENCODE_SERVER_PASSWORD}`).toString("base64")}`,
+                Authorization: `Basic ${Buffer.from(`${Flag.NOCODE_AI_SERVER_USERNAME ?? "nocode-ai"}:${Flag.NOCODE_AI_SERVER_PASSWORD}`).toString("base64")}`,
               }
             : undefined,
           fetch: async (...args) => (await Server.Default()).app.fetch(...args),
@@ -158,8 +158,8 @@ export const layer = Layer.effect(
           if (init._tag === "Some") hooks.push(init.value)
         }
 
-        const plugins = Flag.OPENCODE_PURE ? [] : (cfg.plugin_origins ?? [])
-        if (Flag.OPENCODE_PURE && cfg.plugin_origins?.length) {
+        const plugins = Flag.NOCODE_AI_PURE ? [] : (cfg.plugin_origins ?? [])
+        if (Flag.NOCODE_AI_PURE && cfg.plugin_origins?.length) {
           log.info("skipping external plugins in pure mode", { count: cfg.plugin_origins.length })
         }
         if (plugins.length) yield* config.waitForDependencies()

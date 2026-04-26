@@ -9,12 +9,12 @@ import { Instance } from "@/project/instance"
 import { Vcs } from "@/project"
 import { Agent } from "@/agent/agent"
 import { Skill } from "@/skill"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { LSP } from "@/lsp"
 import { Command } from "@/command"
 import { QuestionRoutes } from "./question"
 import { PermissionRoutes } from "./permission"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { ExperimentalHttpApiServer } from "./httpapi/server"
 import { ExperimentalPaths } from "./httpapi/experimental"
 import { FilePaths } from "./httpapi/file"
@@ -36,7 +36,7 @@ import { jsonRequest } from "./trace"
 export const InstanceRoutes = (upgrade: UpgradeWebSocket): Hono => {
   const app = new Hono()
 
-  if (Flag.OPENCODE_EXPERIMENTAL_HTTPAPI) {
+  if (Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI) {
     const handler = ExperimentalHttpApiServer.webHandler().handler
     const context = Context.empty() as Context.Context<unknown>
     app.get("/question", (c) => handler(c.req.raw, context))
@@ -108,7 +108,7 @@ export const InstanceRoutes = (upgrade: UpgradeWebSocket): Hono => {
       "/instance/dispose",
       describeRoute({
         summary: "Dispose instance",
-        description: "Clean up and dispose the current OpenCode instance, releasing all resources.",
+        description: "Clean up and dispose the current NocodeAi instance, releasing all resources.",
         operationId: "instance.dispose",
         responses: {
           200: {
@@ -130,7 +130,7 @@ export const InstanceRoutes = (upgrade: UpgradeWebSocket): Hono => {
       "/path",
       describeRoute({
         summary: "Get paths",
-        description: "Retrieve the current working directory and related path information for the OpenCode instance.",
+        description: "Retrieve the current working directory and related path information for the NocodeAi instance.",
         operationId: "path.get",
         responses: {
           200: {
@@ -224,7 +224,7 @@ export const InstanceRoutes = (upgrade: UpgradeWebSocket): Hono => {
       "/command",
       describeRoute({
         summary: "List commands",
-        description: "Get a list of all available commands in the OpenCode system.",
+        description: "Get a list of all available commands in the NocodeAi system.",
         operationId: "command.list",
         responses: {
           200: {
@@ -247,7 +247,7 @@ export const InstanceRoutes = (upgrade: UpgradeWebSocket): Hono => {
       "/agent",
       describeRoute({
         summary: "List agents",
-        description: "Get a list of all available AI agents in the OpenCode system.",
+        description: "Get a list of all available AI agents in the NocodeAi system.",
         operationId: "app.agents",
         responses: {
           200: {
@@ -270,7 +270,7 @@ export const InstanceRoutes = (upgrade: UpgradeWebSocket): Hono => {
       "/skill",
       describeRoute({
         summary: "List skills",
-        description: "Get a list of all available skills in the OpenCode system.",
+        description: "Get a list of all available skills in the NocodeAi system.",
         operationId: "app.skills",
         responses: {
           200: {

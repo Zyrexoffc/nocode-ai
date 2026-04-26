@@ -4,7 +4,7 @@ import { InstanceState } from "@/effect"
 import { Instance } from "@/project/instance"
 import type { Proc } from "#pty"
 import { Log } from "../util"
-import { lazy } from "@opencode-ai/core/util/lazy"
+import { lazy } from "@nocode-ai-ai/core/util/lazy"
 import { Shell } from "@/shell/shell"
 import { Plugin } from "@/plugin"
 import { PtyID } from "./schema"
@@ -112,7 +112,7 @@ export interface Interface {
   ) => Effect.Effect<{ onMessage: (message: string | ArrayBuffer) => void; onClose: () => void } | undefined>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Pty") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Pty") {}
 
 export const layer = Layer.effect(
   Service,
@@ -188,7 +188,7 @@ export const layer = Layer.effect(
         ...input.env,
         ...shell.env,
         TERM: "xterm-256color",
-        OPENCODE_TERMINAL: "1",
+        NOCODE_AI_TERMINAL: "1",
       } as Record<string, string>
 
       if (process.platform === "win32") {

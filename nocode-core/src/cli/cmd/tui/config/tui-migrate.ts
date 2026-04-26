@@ -3,14 +3,14 @@ import { type ParseError as JsoncParseError, applyEdits, modify, parse as parseJ
 import { unique } from "remeda"
 import z from "zod"
 import { TuiInfo, TuiOptions } from "./tui-schema"
-import { Flag } from "@opencode-ai/core/flag/flag"
-import { Global } from "@opencode-ai/core/global"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Filesystem, Log } from "@/util"
 import * as ConfigPaths from "@/config/paths"
 
 const log = Log.create({ service: "tui.migrate" })
 
-const TUI_SCHEMA_URL = "https://opencode.ai/tui.json"
+const TUI_SCHEMA_URL = "https://nocode-ai.ai/tui.json"
 
 const LegacyTheme = TuiInfo.shape.theme.optional()
 const LegacyRecord = z.record(z.string(), z.unknown()).optional()
@@ -29,13 +29,13 @@ interface MigrateInput {
 }
 
 /**
- * Migrates tui-specific keys (theme, keybinds, tui) from opencode.json files
+ * Migrates tui-specific keys (theme, keybinds, tui) from nocode-ai.json files
  * into dedicated tui.json files. Migration is performed per-directory and
  * skips only locations where a tui.json already exists.
  */
 export async function migrateTuiConfig(input: MigrateInput) {
-  const opencode = await opencodeFiles(input)
-  for (const file of opencode) {
+  const nocode-ai = await nocode-aiFiles(input)
+  for (const file of nocode-ai) {
     const source = await Filesystem.readText(file).catch((error) => {
       log.warn("failed to read config for tui migration", { path: file, error })
       return undefined
@@ -131,15 +131,15 @@ async function backupAndStripLegacy(file: string, source: string) {
     })
 }
 
-async function opencodeFiles(input: { directories: string[]; cwd: string }) {
+async function nocode-aiFiles(input: { directories: string[]; cwd: string }) {
   const files = [
-    ...ConfigPaths.fileInDirectory(Global.Path.config, "opencode"),
-    ...(await Filesystem.findUp(["opencode.json", "opencode.jsonc"], input.cwd, undefined, { rootFirst: true })),
+    ...ConfigPaths.fileInDirectory(Global.Path.config, "nocode-ai"),
+    ...(await Filesystem.findUp(["nocode-ai.json", "nocode-ai.jsonc"], input.cwd, undefined, { rootFirst: true })),
   ]
   for (const dir of unique(input.directories)) {
-    files.push(...ConfigPaths.fileInDirectory(dir, "opencode"))
+    files.push(...ConfigPaths.fileInDirectory(dir, "nocode-ai"))
   }
-  if (Flag.OPENCODE_CONFIG) files.push(Flag.OPENCODE_CONFIG)
+  if (Flag.NOCODE_AI_CONFIG) files.push(Flag.NOCODE_AI_CONFIG)
 
   const existing = await Promise.all(
     unique(files).map(async (file) => {

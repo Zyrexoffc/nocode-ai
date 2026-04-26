@@ -62,20 +62,20 @@ describe("ide", () => {
     expect(Ide.ide()).toBe("unknown")
   })
 
-  test("should recognize vscode-insiders OPENCODE_CALLER", () => {
-    process.env["OPENCODE_CALLER"] = "vscode-insiders"
+  test("should recognize vscode-insiders NOCODE_AI_CALLER", () => {
+    process.env["NOCODE_AI_CALLER"] = "vscode-insiders"
 
     expect(Ide.alreadyInstalled()).toBe(true)
   })
 
-  test("should recognize vscode OPENCODE_CALLER", () => {
-    process.env["OPENCODE_CALLER"] = "vscode"
+  test("should recognize vscode NOCODE_AI_CALLER", () => {
+    process.env["NOCODE_AI_CALLER"] = "vscode"
 
     expect(Ide.alreadyInstalled()).toBe(true)
   })
 
-  test("should return false for unknown OPENCODE_CALLER", () => {
-    process.env["OPENCODE_CALLER"] = "unknown"
+  test("should return false for unknown NOCODE_AI_CALLER", () => {
+    process.env["NOCODE_AI_CALLER"] = "unknown"
 
     expect(Ide.alreadyInstalled()).toBe(false)
   })

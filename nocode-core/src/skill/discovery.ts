@@ -2,8 +2,8 @@ import { NodePath } from "@effect/platform-node"
 import { Effect, Layer, Path, Schema, Context } from "effect"
 import { FetchHttpClient, HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { withTransientReadRetry } from "@/util/effect-http-client"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
-import { Global } from "@opencode-ai/core/global"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Log } from "../util"
 
 const skillConcurrency = 4
@@ -22,7 +22,7 @@ export interface Interface {
   readonly pull: (url: string) => Effect.Effect<string[]>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/SkillDiscovery") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/SkillDiscovery") {}
 
 export const layer: Layer.Layer<Service, never, AppFileSystem.Service | Path.Path | HttpClient.HttpClient> =
   Layer.effect(

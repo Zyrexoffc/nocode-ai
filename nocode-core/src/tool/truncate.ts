@@ -2,7 +2,7 @@ import { NodePath } from "@effect/platform-node"
 import { Cause, Duration, Effect, Layer, Option, Schedule, Context } from "effect"
 import path from "path"
 import type { Agent } from "../agent/agent"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { evaluate } from "@/permission/evaluate"
 import { Config } from "../config"
 import { Identifier } from "../id/id"
@@ -40,12 +40,12 @@ export interface Interface {
    */
   readonly output: (text: string, options?: Options, agent?: Agent.Info) => Effect.Effect<Result>
   /**
-   * Resolved truncation limits: values from `tool_output` in opencode config, or MAX_LINES / MAX_BYTES if unset.
+   * Resolved truncation limits: values from `tool_output` in nocode-ai config, or MAX_LINES / MAX_BYTES if unset.
    */
   readonly limits: () => Effect.Effect<{ maxLines: number; maxBytes: number }>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Truncate") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Truncate") {}
 
 export const layer = Layer.effect(
   Service,

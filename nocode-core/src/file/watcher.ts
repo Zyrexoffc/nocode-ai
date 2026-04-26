@@ -8,7 +8,7 @@ import z from "zod"
 import { Bus } from "@/bus"
 import { BusEvent } from "@/bus/bus-event"
 import { InstanceState } from "@/effect"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { Git } from "@/git"
 import { Instance } from "@/project/instance"
 import { lazy } from "@/util/lazy"
@@ -17,7 +17,7 @@ import { FileIgnore } from "./ignore"
 import { Protected } from "./protected"
 import { Log } from "../util"
 
-declare const OPENCODE_LIBC: string | undefined
+declare const NOCODE_AI_LIBC: string | undefined
 
 const log = Log.create({ service: "file.watcher" })
 const SUBSCRIBE_TIMEOUT_MS = 10_000
@@ -35,7 +35,7 @@ export const Event = {
 const watcher = lazy((): typeof import("@parcel/watcher") | undefined => {
   try {
     const binding = require(
-      `@parcel/watcher-${process.platform}-${process.arch}${process.platform === "linux" ? `-${OPENCODE_LIBC || "glibc"}` : ""}`,
+      `@parcel/watcher-${process.platform}-${process.arch}${process.platform === "linux" ? `-${NOCODE_AI_LIBC || "glibc"}` : ""}`,
     )
     return createWrapper(binding) as typeof import("@parcel/watcher")
   } catch (error) {
@@ -63,7 +63,7 @@ export interface Interface {
   readonly init: () => Effect.Effect<void>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/FileWatcher") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/FileWatcher") {}
 
 export const layer = Layer.effect(
   Service,
@@ -74,7 +74,7 @@ export const layer = Layer.effect(
     const state = yield* InstanceState.make(
       Effect.fn("FileWatcher.state")(
         function* () {
-          if (yield* Flag.OPENCODE_EXPERIMENTAL_DISABLE_FILEWATCHER) return
+          if (yield* Flag.NOCODE_AI_EXPERIMENTAL_DISABLE_FILEWATCHER) return
 
           log.info("init", { directory: Instance.directory })
 
@@ -121,7 +121,7 @@ export const layer = Layer.effect(
           const cfg = yield* config.get()
           const cfgIgnores = cfg.watcher?.ignore ?? []
 
-          if (yield* Flag.OPENCODE_EXPERIMENTAL_FILEWATCHER) {
+          if (yield* Flag.NOCODE_AI_EXPERIMENTAL_FILEWATCHER) {
             yield* subscribe(Instance.directory, [
               ...FileIgnore.PATTERNS,
               ...cfgIgnores,

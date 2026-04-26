@@ -1,6 +1,6 @@
 import { Effect, Encoding, Layer, Redacted, Schema } from "effect"
 import { HttpApiMiddleware, HttpApiSecurity } from "effect/unstable/httpapi"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 
 class Unauthorized extends Schema.TaggedErrorClass<Unauthorized>()(
   "Unauthorized",
@@ -9,7 +9,7 @@ class Unauthorized extends Schema.TaggedErrorClass<Unauthorized>()(
 ) {}
 
 export class Authorization extends HttpApiMiddleware.Service<Authorization>()(
-  "@opencode/ExperimentalHttpApiAuthorization",
+  "@nocode-ai/ExperimentalHttpApiAuthorization",
   {
     error: Unauthorized,
     security: {
@@ -29,12 +29,12 @@ function validateCredential<A, E, R>(
   credential: { readonly username: string; readonly password: typeof emptyCredential.password },
 ) {
   return Effect.gen(function* () {
-    if (!Flag.OPENCODE_SERVER_PASSWORD) return yield* effect
+    if (!Flag.NOCODE_AI_SERVER_PASSWORD) return yield* effect
 
-    if (credential.username !== (Flag.OPENCODE_SERVER_USERNAME ?? "opencode")) {
+    if (credential.username !== (Flag.NOCODE_AI_SERVER_USERNAME ?? "nocode-ai")) {
       return yield* new Unauthorized({ message: "Unauthorized" })
     }
-    if (Redacted.value(credential.password) !== Flag.OPENCODE_SERVER_PASSWORD) {
+    if (Redacted.value(credential.password) !== Flag.NOCODE_AI_SERVER_PASSWORD) {
       return yield* new Unauthorized({ message: "Unauthorized" })
     }
     return yield* effect

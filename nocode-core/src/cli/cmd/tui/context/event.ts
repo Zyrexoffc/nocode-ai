@@ -1,4 +1,4 @@
-import type { Event } from "@opencode-ai/sdk/v2"
+import type { Event } from "@nocode-ai-ai/sdk/v2"
 import { useProject } from "./project"
 import { useSDK } from "./sdk"
 

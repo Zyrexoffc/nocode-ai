@@ -7,7 +7,7 @@ import { Instance } from "@/project/instance"
 import { EventSequenceTable, EventTable } from "./event.sql"
 import { WorkspaceContext } from "@/control-plane/workspace-context"
 import { EventID } from "./schema"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { Schema as EffectSchema } from "effect"
 import { zodObject } from "@/util/effect-zod"
 import type { DeepMutable } from "@/util/schema"
@@ -135,7 +135,7 @@ function process<Def extends Definition>(def: Def, event: Event<Def>, options: {
   Database.transaction((tx) => {
     projector(tx, event.data)
 
-    if (Flag.OPENCODE_EXPERIMENTAL_WORKSPACES) {
+    if (Flag.NOCODE_AI_EXPERIMENTAL_WORKSPACES) {
       tx.insert(EventSequenceTable)
         .values({
           aggregate_id: event.aggregateID,

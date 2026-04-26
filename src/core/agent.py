@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NocodAI v3.0 - Upgraded with OpenCode System Logic
+NocodAI v3.0 - Upgraded with NocodeAi System Logic
 Features: Multi-agent, advanced tools, session DB, provider support, permission system
 """
 import os, sys, json, subprocess, requests, re, time, datetime, threading, signal, hashlib, sqlite3, glob, uuid
@@ -301,7 +301,7 @@ class AgentManager:
 
     def generate_prompt(s, agent_name, description):
         agent = s.get(agent_name)
-        # Simulated prompt generation (opencode uses generate.txt)
+        # Simulated prompt generation (nocode-ai uses generate.txt)
         return f"You are {agent['name']}, {agent.get('description', '')}. {description}"
 
 class NocodAI:
@@ -344,7 +344,7 @@ class NocodAI:
         print(f"{Colors.K}{Colors.D}", end="")
         sp = " " * s.w
         print(sp)
-        title = f"  {Colors.BOLD}NOCOD.AI v{VERSION}{Colors.N} - Upgraded with OpenCode Logic"
+        title = f"  {Colors.BOLD}NOCOD.AI v{VERSION}{Colors.N} - Upgraded with NocodeAi Logic"
         print(title + " " * max(0, s.w - len(title) + 17))
         print(sp + Colors.N)
         print()

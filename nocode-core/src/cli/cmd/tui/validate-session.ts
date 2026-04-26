@@ -1,4 +1,4 @@
-import { createOpencodeClient } from "@opencode-ai/sdk/v2"
+import { createOpencodeClient } from "@nocode-ai-ai/sdk/v2"
 import { SessionID } from "@/session/schema"
 
 export async function validateSession(input: {

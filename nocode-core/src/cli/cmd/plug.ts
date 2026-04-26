@@ -2,7 +2,7 @@ import { intro, log, outro, spinner } from "@clack/prompts"
 import type { Argv } from "yargs"
 
 import { ConfigPaths } from "../../config"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { installPlugin, patchPluginConfig, readPluginManifest } from "../../plugin/install"
 import { resolvePluginTarget } from "../../plugin/shared"
 import { Instance } from "../../project/instance"
@@ -28,7 +28,7 @@ export type PlugDeps = {
   readText: (file: string) => Promise<string>
   write: (file: string, text: string) => Promise<void>
   exists: (file: string) => Promise<boolean>
-  files: (dir: string, name: "opencode" | "tui") => string[]
+  files: (dir: string, name: "nocode-ai" | "tui") => string[]
   global: string
 }
 

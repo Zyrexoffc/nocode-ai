@@ -183,9 +183,9 @@ function withInstance(
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Bun.write(
-          `${dir}/opencode.json`,
+          `${dir}/nocode-ai.json`,
           JSON.stringify({
-            $schema: "https://opencode.ai/config.json",
+            $schema: "https://nocode-ai.ai/config.json",
             mcp: config,
           }),
         )

@@ -5,7 +5,7 @@ import { SessionID } from "../../session/schema"
 import { bootstrap } from "../bootstrap"
 import { UI } from "../ui"
 import { Locale } from "../../util"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { Filesystem } from "../../util"
 import { Process } from "../../util"
 import { EOL } from "os"
@@ -25,8 +25,8 @@ function pagerCmd(): string[] {
     if (Filesystem.stat(lessOnPath)?.size) return [lessOnPath, ...lessOptions]
   }
 
-  if (Flag.OPENCODE_GIT_BASH_PATH) {
-    const less = path.join(Flag.OPENCODE_GIT_BASH_PATH, "..", "..", "usr", "bin", "less.exe")
+  if (Flag.NOCODE_AI_GIT_BASH_PATH) {
+    const less = path.join(Flag.NOCODE_AI_GIT_BASH_PATH, "..", "..", "usr", "bin", "less.exe")
     if (Filesystem.stat(less)?.size) return [less, ...lessOptions]
   }
 

@@ -1,9 +1,9 @@
 import { Log } from "../util"
 import path from "path"
-import { Global } from "@opencode-ai/core/global"
-import { NamedError } from "@opencode-ai/core/util/error"
+import { Global } from "@nocode-ai-ai/core/global"
+import { NamedError } from "@nocode-ai-ai/core/util/error"
 import z from "zod"
-import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { AppFileSystem } from "@nocode-ai-ai/core/filesystem"
 import { Effect, Exit, Layer, Option, RcMap, Schema, Context, TxReentrantLock } from "effect"
 import { Git } from "@/git"
 
@@ -64,7 +64,7 @@ export interface Interface {
   readonly list: (prefix: string[]) => Effect.Effect<string[][], AppFileSystem.Error>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Storage") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Storage") {}
 
 function file(dir: string, key: string[]) {
   return path.join(dir, ...key) + ".json"

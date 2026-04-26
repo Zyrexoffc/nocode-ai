@@ -4,7 +4,7 @@ import { getAdaptor } from "@/control-plane/adaptors"
 import { WorkspaceID } from "@/control-plane/schema"
 import { WorkspaceContext } from "@/control-plane/workspace-context"
 import { Workspace } from "@/control-plane/workspace"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { InstanceBootstrap } from "@/project/bootstrap"
 import { Instance } from "@/project/instance"
 import { Session } from "@/session"
@@ -58,7 +58,7 @@ export function WorkspaceRouterMiddleware(upgrade: UpgradeWebSocket): Middleware
     const sessionWorkspaceID = await getSessionWorkspace(url)
     const workspaceID = sessionWorkspaceID || url.searchParams.get("workspace")
 
-    if (!workspaceID || url.pathname.startsWith("/console") || Flag.OPENCODE_WORKSPACE_ID) {
+    if (!workspaceID || url.pathname.startsWith("/console") || Flag.NOCODE_AI_WORKSPACE_ID) {
       return next()
     }
 
@@ -114,7 +114,7 @@ export function WorkspaceRouterMiddleware(upgrade: UpgradeWebSocket): Middleware
     }
 
     const headers = new Headers(c.req.raw.headers)
-    headers.delete("x-opencode-workspace")
+    headers.delete("x-nocode-ai-workspace")
 
     const req = new Request(c.req.raw, { headers })
     return ServerProxy.http(proxyURL, target.headers, req, workspace.id)

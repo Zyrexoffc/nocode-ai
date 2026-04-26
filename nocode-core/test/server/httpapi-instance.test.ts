@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import type { UpgradeWebSocket } from "hono/ws"
 import path from "path"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { GlobalBus } from "@/bus/global"
 import { Instance } from "../../src/project/instance"
 import { InstanceRoutes } from "../../src/server/routes/instance"
@@ -12,11 +12,11 @@ import { tmpdir } from "../fixture/fixture"
 
 void Log.init({ print: false })
 
-const original = Flag.OPENCODE_EXPERIMENTAL_HTTPAPI
+const original = Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI
 const websocket = (() => () => new Response(null, { status: 501 })) as unknown as UpgradeWebSocket
 
 function app() {
-  Flag.OPENCODE_EXPERIMENTAL_HTTPAPI = true
+  Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI = true
   return InstanceRoutes(websocket)
 }
 
@@ -39,7 +39,7 @@ async function waitDisposed(directory: string) {
 }
 
 afterEach(async () => {
-  Flag.OPENCODE_EXPERIMENTAL_HTTPAPI = original
+  Flag.NOCODE_AI_EXPERIMENTAL_HTTPAPI = original
   await Instance.disposeAll()
   await resetDatabase()
 })
@@ -53,9 +53,9 @@ describe("instance HttpApi", () => {
     vcsDiff.searchParams.set("mode", "git")
 
     const [paths, vcs, diff] = await Promise.all([
-      app().request(InstancePaths.path, { headers: { "x-opencode-directory": tmp.path } }),
-      app().request(InstancePaths.vcs, { headers: { "x-opencode-directory": tmp.path } }),
-      app().request(vcsDiff, { headers: { "x-opencode-directory": tmp.path } }),
+      app().request(InstancePaths.path, { headers: { "x-nocode-ai-directory": tmp.path } }),
+      app().request(InstancePaths.vcs, { headers: { "x-nocode-ai-directory": tmp.path } }),
+      app().request(vcsDiff, { headers: { "x-nocode-ai-directory": tmp.path } }),
     ])
 
     expect(paths.status).toBe(200)
@@ -74,11 +74,11 @@ describe("instance HttpApi", () => {
     await using tmp = await tmpdir({ config: { formatter: false, lsp: false } })
 
     const [commands, agents, skills, lsp, formatter] = await Promise.all([
-      app().request(InstancePaths.command, { headers: { "x-opencode-directory": tmp.path } }),
-      app().request(InstancePaths.agent, { headers: { "x-opencode-directory": tmp.path } }),
-      app().request(InstancePaths.skill, { headers: { "x-opencode-directory": tmp.path } }),
-      app().request(InstancePaths.lsp, { headers: { "x-opencode-directory": tmp.path } }),
-      app().request(InstancePaths.formatter, { headers: { "x-opencode-directory": tmp.path } }),
+      app().request(InstancePaths.command, { headers: { "x-nocode-ai-directory": tmp.path } }),
+      app().request(InstancePaths.agent, { headers: { "x-nocode-ai-directory": tmp.path } }),
+      app().request(InstancePaths.skill, { headers: { "x-nocode-ai-directory": tmp.path } }),
+      app().request(InstancePaths.lsp, { headers: { "x-nocode-ai-directory": tmp.path } }),
+      app().request(InstancePaths.formatter, { headers: { "x-nocode-ai-directory": tmp.path } }),
     ])
 
     expect(commands.status).toBe(200)
@@ -103,14 +103,14 @@ describe("instance HttpApi", () => {
 
     const response = await app().request("/project/git/init", {
       method: "POST",
-      headers: { "x-opencode-directory": tmp.path },
+      headers: { "x-nocode-ai-directory": tmp.path },
     })
 
     expect(response.status).toBe(200)
     expect(await response.json()).toMatchObject({ vcs: "git", worktree: tmp.path })
     await disposed
 
-    const current = await app().request("/project/current", { headers: { "x-opencode-directory": tmp.path } })
+    const current = await app().request("/project/current", { headers: { "x-nocode-ai-directory": tmp.path } })
     expect(current.status).toBe(200)
     expect(await current.json()).toMatchObject({ vcs: "git", worktree: tmp.path })
   })
@@ -118,13 +118,13 @@ describe("instance HttpApi", () => {
   test("serves project update through Hono bridge", async () => {
     await using tmp = await tmpdir({ config: { formatter: false, lsp: false } })
 
-    const current = await app().request("/project/current", { headers: { "x-opencode-directory": tmp.path } })
+    const current = await app().request("/project/current", { headers: { "x-nocode-ai-directory": tmp.path } })
     expect(current.status).toBe(200)
     const project = (await current.json()) as { id: string }
 
     const response = await app().request(`/project/${project.id}`, {
       method: "PATCH",
-      headers: { "x-opencode-directory": tmp.path, "content-type": "application/json" },
+      headers: { "x-nocode-ai-directory": tmp.path, "content-type": "application/json" },
       body: JSON.stringify({ name: "patched-project", commands: { start: "bun dev" } }),
     })
 
@@ -135,7 +135,7 @@ describe("instance HttpApi", () => {
       commands: { start: "bun dev" },
     })
 
-    const list = await app().request("/project", { headers: { "x-opencode-directory": tmp.path } })
+    const list = await app().request("/project", { headers: { "x-nocode-ai-directory": tmp.path } })
     expect(list.status).toBe(200)
     expect(await list.json()).toContainEqual(
       expect.objectContaining({ id: project.id, name: "patched-project", commands: { start: "bun dev" } }),
@@ -156,7 +156,7 @@ describe("instance HttpApi", () => {
 
     const response = await app().request(InstancePaths.dispose, {
       method: "POST",
-      headers: { "x-opencode-directory": tmp.path },
+      headers: { "x-nocode-ai-directory": tmp.path },
     })
 
     expect(response.status).toBe(200)

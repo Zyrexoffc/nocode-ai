@@ -1,4 +1,4 @@
-import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
+import { CrossSpawnSpawner } from "@nocode-ai-ai/core/cross-spawn-spawner"
 import { Effect, Layer, Context, Stream } from "effect"
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
 
@@ -78,7 +78,7 @@ const kind = (code: string): Kind => {
   return "modified"
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/Git") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/Git") {}
 
 export const layer = Layer.effect(
   Service,

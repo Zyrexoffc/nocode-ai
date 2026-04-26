@@ -1,12 +1,12 @@
 import { Effect, Fiber, ScopedCache, Scope, Context } from "effect"
-import * as EffectLogger from "@opencode-ai/core/effect/logger"
+import * as EffectLogger from "@nocode-ai-ai/core/effect/logger"
 import { Instance, type InstanceContext } from "@/project/instance"
 import { LocalContext } from "@/util"
 import { InstanceRef, WorkspaceRef } from "./instance-ref"
 import { registerDisposer } from "./instance-registry"
 import { WorkspaceContext } from "@/control-plane/workspace-context"
 
-const TypeId = "~opencode/InstanceState"
+const TypeId = "~nocode-ai/InstanceState"
 
 export interface InstanceState<A, E = never, R = never> {
   readonly [TypeId]: typeof TypeId

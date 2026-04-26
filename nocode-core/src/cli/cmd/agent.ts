@@ -2,7 +2,7 @@ import { cmd } from "./cmd"
 import * as prompts from "@clack/prompts"
 import { AppRuntime } from "@/effect/app-runtime"
 import { UI } from "../ui"
-import { Global } from "@opencode-ai/core/global"
+import { Global } from "@nocode-ai-ai/core/global"
 import { Agent } from "../../agent/agent"
 import { Provider } from "../../provider"
 import path from "path"
@@ -88,7 +88,7 @@ const AgentCreateCommand = cmd({
             scope = scopeResult
           }
           targetPath = path.join(
-            scope === "global" ? Global.Path.config : path.join(Instance.worktree, ".opencode"),
+            scope === "global" ? Global.Path.config : path.join(Instance.worktree, ".nocode-ai"),
             "agent",
           )
         }

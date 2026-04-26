@@ -1,4 +1,4 @@
-import type * as SDK from "@opencode-ai/sdk/v2"
+import type * as SDK from "@nocode-ai-ai/sdk/v2"
 import { Effect, Exit, Layer, Option, Schema, Scope, Context, Stream } from "effect"
 import { FetchHttpClient, HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { Account } from "@/account/account"
@@ -15,7 +15,7 @@ import { Log } from "@/util"
 import { SessionShareTable } from "./share.sql"
 
 const log = Log.create({ service: "share-next" })
-const disabled = process.env["OPENCODE_DISABLE_SHARE"] === "true" || process.env["OPENCODE_DISABLE_SHARE"] === "1"
+const disabled = process.env["NOCODE_AI_DISABLE_SHARE"] === "true" || process.env["NOCODE_AI_DISABLE_SHARE"] === "1"
 
 export type Api = {
   create: string
@@ -73,7 +73,7 @@ export interface Interface {
   readonly remove: (sessionID: SessionID) => Effect.Effect<void, unknown>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/ShareNext") {}
+export class Service extends Context.Service<Service, Interface>()("@nocode-ai/ShareNext") {}
 
 const db = <T>(fn: (d: Parameters<typeof Database.use>[0] extends (trx: infer D) => any ? D : never) => T) =>
   Effect.sync(() => Database.use(fn))

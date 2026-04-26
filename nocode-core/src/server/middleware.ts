@@ -1,12 +1,12 @@
 import { Provider } from "../provider"
-import { NamedError } from "@opencode-ai/core/util/error"
+import { NamedError } from "@nocode-ai-ai/core/util/error"
 import { NotFoundError } from "../storage"
 import { Session } from "../session"
 import type { ContentfulStatusCode } from "hono/utils/http-status"
 import type { ErrorHandler, MiddlewareHandler } from "hono"
 import { HTTPException } from "hono/http-exception"
 import { Log } from "../util"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { basicAuth } from "hono/basic-auth"
 import { cors } from "hono/cors"
 import { compress } from "hono/compress"
@@ -40,9 +40,9 @@ export const AuthMiddleware: MiddlewareHandler = (c, next) => {
   // Allow CORS preflight requests to succeed without auth.
   // Browser clients sending Authorization headers will preflight with OPTIONS.
   if (c.req.method === "OPTIONS") return next()
-  const password = Flag.OPENCODE_SERVER_PASSWORD
+  const password = Flag.NOCODE_AI_SERVER_PASSWORD
   if (!password) return next()
-  const username = Flag.OPENCODE_SERVER_USERNAME ?? "opencode"
+  const username = Flag.NOCODE_AI_SERVER_USERNAME ?? "nocode-ai"
 
   if (c.req.query("auth_token")) c.req.raw.headers.set("authorization", `Basic ${c.req.query("auth_token")}`)
 
@@ -76,7 +76,7 @@ export function CorsMiddleware(opts?: { cors?: string[] }): MiddlewareHandler {
       if (input === "tauri://localhost" || input === "http://tauri.localhost" || input === "https://tauri.localhost")
         return input
 
-      if (/^https:\/\/([a-z0-9-]+\.)*opencode\.ai$/.test(input)) return input
+      if (/^https:\/\/([a-z0-9-]+\.)*nocode-ai\.ai$/.test(input)) return input
       if (opts?.cors?.includes(input)) return input
     },
   })

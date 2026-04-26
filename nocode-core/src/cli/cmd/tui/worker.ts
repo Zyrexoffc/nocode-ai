@@ -7,11 +7,11 @@ import { Rpc } from "@/util"
 import { upgrade } from "@/cli/upgrade"
 import { Config } from "@/config"
 import { GlobalBus } from "@/bus/global"
-import { Flag } from "@opencode-ai/core/flag/flag"
+import { Flag } from "@nocode-ai-ai/core/flag/flag"
 import { writeHeapSnapshot } from "node:v8"
 import { Heap } from "@/cli/heap"
 import { AppRuntime } from "@/effect/app-runtime"
-import { ensureProcessMetadata } from "@opencode-ai/core/util/opencode-process"
+import { ensureProcessMetadata } from "@nocode-ai-ai/core/util/nocode-ai-process"
 
 ensureProcessMetadata("worker")
 
@@ -97,8 +97,8 @@ export const rpc = {
 Rpc.listen(rpc)
 
 function getAuthorizationHeader(): string | undefined {
-  const password = Flag.OPENCODE_SERVER_PASSWORD
+  const password = Flag.NOCODE_AI_SERVER_PASSWORD
   if (!password) return undefined
-  const username = Flag.OPENCODE_SERVER_USERNAME ?? "opencode"
+  const username = Flag.NOCODE_AI_SERVER_USERNAME ?? "nocode-ai"
   return `Basic ${btoa(`${username}:${password}`)}`
 }

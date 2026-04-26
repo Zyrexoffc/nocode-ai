@@ -1,4 +1,4 @@
-import type { TuiPlugin, TuiPluginModule } from "@opencode-ai/plugin/tui"
+import type { TuiPlugin, TuiPluginModule } from "@nocode-ai-ai/plugin/tui"
 import { createMemo, Show } from "solid-js"
 import { Tips } from "./tips-view"
 
@@ -37,7 +37,7 @@ const tui: TuiPlugin = async (api) => {
         const first = createMemo(() => api.state.session.count() === 0)
         const connected = createMemo(() =>
           api.state.provider.some(
-            (item) => item.id !== "opencode" || Object.values(item.models).some((model) => model.cost?.input !== 0),
+            (item) => item.id !== "nocode-ai" || Object.values(item.models).some((model) => model.cost?.input !== 0),
           ),
         )
         const show = createMemo(() => (!first() || !connected()) && !hidden())
