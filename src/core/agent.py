@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import json, re, subprocess, os, sys, requests, time, datetime
-from typing import Dict, List
 
 class Colors:
     USER = "\033[92m"
@@ -23,7 +22,7 @@ class NocodAI:
         except:
             c = {}
         s.host = c.get("ollama_host", "http://localhost:11434")
-        s.model = c.get("model", "qwen2.5:3b")
+        s.model = c.get("model", "phi")
         s.ctx = c.get("context_size", 2048)
     
     def ck(s):
@@ -89,62 +88,54 @@ class NocodAI:
         except Exception as e: return f"Er:{e}"
     
     def run(s):
-        print(f"""{Colors.BOLD}{Colors.INFO}
-╔════════════════════════════════════════════════════════════════════════════════╗
-║{Colors.SUCCESS}  ██████╗ ███████╗███████╗██╗     ██╗███╗   ███╗  {Colors.INFO}                              ║
-║{Colors.SUCCESS}  ██╔══██╗██╔════╝██╔════╝██║     ██║████╗  ████╗ {Colors.INFO}                              ║
-║{Colors.SUCCESS}  ██║  ██║█████╗  █████╗  ██║     ██║██╔██╗ ██╔██║ {Colors.INFO}                              ║
-║{Colors.SUCCESS}  ██║  ██║██╔══╝  ██╔══╝  ██║     ██║██║╚███║╚██║ {Colors.INFO}                              ║
-║{Colors.SUCCESS}  ██████╔╝███████╗███████╗███████╗██║██║ ╚████║██║ {Colors.INFO}                              ║
-║{Colors.SUCCESS}  ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚═╝ {Colors.INFO}                              ║
-╠════════════════════════════════════════════════════════════════════════════════╣
-║{Colors.USER}     NOCODE-AI V2.0.0                      Created by Zyrex Official{Colors.INFO}     ║
-╚════════════════════════════════════════════════════════════════════════════════╝
-{Colors.RESET}""")
+        bar = "───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
+        
+        print(f"\n{Colors.INFO}▝▜▄     {Colors.SUCCESS}NOCODE-AI V1.0.0{Colors.INFO}")
+        print(f"{Colors.INFO}   ▝▜▄")
+        print(f"{Colors.INFO}  ▗▟▀    {Colors.USER}Created By Zyrex Official{Colors.SUCCESS} ✔")
+        print(f"{Colors.INFO} ▝▀")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.TOOL}Description:{Colors.RESET}")
+        print(f"{Colors.TOOL}Time:{Colors.RESET} {s.tm}")
+        print(f"{Colors.TOOL}model-ai:{Colors.RESET} {s.model}")
+        print(f"\n{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.DIM}Shift+Tab to accept edits{Colors.RESET}")
+        print(f"{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.INFO}║ {Colors.USER}Type your message or @path/to file{Colors.RESET}")
+        print(f"{Colors.BOLD}{bar}{Colors.RESET}")
+        print(f"{Colors.INFO}Workspace ({Colors.USER}{s.ws}{Colors.INFO})")
+        print(f"{Colors.INFO}Script (nocode-ai){Colors.INFO}")
+        print(f"{Colors.USER}~{Colors.RESET}")
+        print(f"{Colors.BOLD}{bar}{Colors.RESET}")
+        
         if not s.ck():
             print(f"{Colors.ERROR}[*] Starting Ollama...{Colors.RESET}")
             subprocess.Popen(["ollama","serve"],stdout=open(os.devnull,"w"),stderr=open(os.devnull,"w"))
             time.sleep(3)
         if not s.cm():
             print(f"{Colors.TOOL}[*] Downloading model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
-        s.sp="""You are NocodAI, a professional AI assistant with ROOT VPS access.
+        
+        s.sp="""You are NocodAI.
 RULES:
-1. LEGALITY: Only legal activities. REFUSE hacking, malware, Piracy, fraud, illegal.
-2. FILE ACCESS: Full root. Read/edit/delete files only when USER explicitly asks.
-3. TOOLS: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system.
-4. CODING: Clean code, best practices.
-5. PROBLEM SOLVING: Think step by step.
-6. OUTPUT: Concise, code in blocks.
-7. LANGUAGE: Same as user (Indonesian/English/etc)."""
-
-        print(f"\n{Colors.BOLD}╔════════════════════════════════════════════════════════════════════════════════╗{Colors.RESET}")
-        print(f"{Colors.BOLD}║{Colors.TOOL} Description:{Colors.RESET} AI Assistant with tool execution (shell, file ops, git)   {Colors.BOLD}║{Colors.RESET}")
-        print(f"{Colors.BOLD}║{Colors.TOOL} Time:{Colors.RESET} {s.tm}                                                           {Colors.BOLD}║{Colors.RESET}")
-        print(f"{Colors.BOLD}║{Colors.TOOL} Model-AI:{Colors.RESET} {s.model}                                                              {Colors.BOLD}║{Colors.RESET}")
-        print(f"{Colors.BOLD}╚════════════════════════════════════════════════════════════════════════════════╝{Colors.RESET}\n")
-
+1. LEGALITY: Only legal.
+2. TOOLS: shell, file_read, file_write, file_edit, file_delete, file_list, mkdir, search, git, system.
+3. CODING: Clean code.
+4. LANGUAGE: Same as user."""
+        
         while 1:
-            try:
-                print(f"{Colors.INFO}Type message:{Colors.RESET}")
-                p=input(f"{Colors.INFO}│ {Colors.USER}> {Colors.RESET}")
-                if p.lower() in ["exit","quit","q"]: print(f"{Colors.INFO}[*] Goodbye!{Colors.RESET}"); break
-                s.h.append({"role":"user","content":p})
-                print(f"{Colors.DIM}Thinking...{Colors.RESET}")
-                full=""
-                for c in s.gs(p,s.sp): full+=c
-                print(f"{Colors.USER}%s{Colors.RESET}" % full)
-                s.h.append({"role":"assistant","content":full})
-                tools = s.pt(full)
-                if tools:
-                    for t in tools:
-                        n,a=t.get("name",""),t.get("arguments",{})
-                        print(f"\n{Colors.TOOL}>>> Executing: {n}{Colors.RESET}")
-                        r=s.ex(n,a)
-                        print(f"\n{Colors.TOOL}Result: {r[:500]}{Colors.RESET}\n")
-                        s.h.append({"role":"user","content":f"Tool {n} result: {r}"})
-                        for c in s.gs("Based on the tool result, provide your final answer.",s.sp): full=c
-                        print(f"{Colors.USER}%s{Colors.RESET}" % full)
-            except KeyboardInterrupt: print(f"\n{Colors.INFO}exit{Colors.RESET}")
-            except Exception as e: print(f"{Colors.ERROR}{e}{Colors.RESET}")
+            p=input(f"{Colors.INFO}│{Colors.USER} > {Colors.RESET}")
+            if p.lower() in ["exit","quit","q"]: break
+            s.h.append({"role":"user","content":p})
+            print(f"{Colors.DIM}Thinking...{Colors.RESET}")
+            full=""
+            for c in s.gs(p,s.sp): full+=c
+            print(f"{Colors.USER}%s{Colors.RESET}" % full)
+            s.h.append({"role":"assistant","content":full})
+            tools = s.pt(full)
+            for t in tools:
+                n,a=t.get("name",""),t.get("arguments",{})
+                r=s.ex(n,a)
+                for c in s.gs(f"Tool {n} result: {r}",s.sp):
+                    print(f"{Colors.USER}%s{Colors.RESET}" % c)
 
 if __name__=="__main__": NocodAI().run()
