@@ -90,7 +90,7 @@ class NocodAI:
         print(f"/ __| | | |_ _|  _ \\| _ \\ ")
         print(f"\\__ \\ |_| || || |_) | |_) |")
         print(f"|___/\\___/|___|____/|____/ ")
-        print(f"{Colors.INFO}NocodAI v1.2 - FIXED{Colors.RESET}")
+        print(f"{Colors.INFO}NocodAI v1.3 - Simple Mode{Colors.RESET}")
         if not s.ck():
             print(f"{Colors.ERROR}Starting Ollama...{Colors.RESET}")
             subprocess.Popen(["ollama","serve"],stdout=open(os.devnull,"w"),stderr=open(os.devnull,"w"))
@@ -98,7 +98,7 @@ class NocodAI:
         if not s.cm():
             print(f"{Colors.TOOL}DL model...{Colors.RESET}") ; subprocess.run(["ollama","pull",s.model],timeout=600)
         sp=open(os.path.expanduser("~/.nocode/config/system_prompt.txt")).read() if os.path.exists(os.path.expanduser("~/.nocode/config/system_prompt.txt")) else ""
-        print(f"{Colors.SUCCESS}READY! Cmd below:{Colors.RESET}\n")
+        print(f"{Colors.SUCCESS}READY! Just type and chat:{Colors.RESET}\n")
         while 1:
             try:
                 p=input(f"{Colors.USER}>>> {Colors.RESET}")
@@ -108,17 +108,19 @@ class NocodAI:
                 print(f"{Colors.ASSISTANT}",end="")
                 for c in s.gs(p,sp): print(c,end="",flush=1); full+=c
                 print(f"{Colors.RESET}")
-                for t in s.pt(full):
-                    n,a=t.get("name",""),t.get("arguments",{})
-                    print(f"\n{Colors.TOOL}>>> {n}{Colors.RESET}")
-                    r=s.ex(n,a)
-                    print(f"\n{Colors.TOOL}{r[:500]}{Colors.RESET}\n")
-                    s.h.append({"role":"assistant","content":full})
-                    s.h.append({"role":"user","content":f"R:{r}"})
-                    print(f"{Colors.ASSISTANT}",end="")
-                    for c in s.gs("",sp): print(c,end="",flush=1)
-                    print(f"{Colors.RESET}")
-            except KeyboardInterrupt: print(f"\n{Colors.INFO}exit{C.RESET}")
+                s.h.append({"role":"assistant","content":full})
+                tools = s.pt(full)
+                if tools:
+                    for t in tools:
+                        n,a=t.get("name",""),t.get("arguments",{})
+                        print(f"\n{Colors.TOOL}>>> Executing: {n}{Colors.RESET}")
+                        r=s.ex(n,a)
+                        print(f"\n{Colors.TOOL}Result: {r[:500]}{Colors.RESET}\n")
+                        s.h.append({"role":"user","content":f"Tool {n} result: {r}"})
+                        print(f"{Colors.ASSISTANT}>>> ",end="",flush=1)
+                        for c in s.gs("Based on the tool result, provide your final answer.",sp): print(c,end="",flush=1)
+                        print(f"{Colors.RESET}")
+            except KeyboardInterrupt: print(f"\n{Colors.INFO}exit{Colors.RESET}")
             except Exception as e: print(f"{Colors.ERROR}{e}{Colors.RESET}")
 
 if __name__=="__main__": NocodAI().run()
